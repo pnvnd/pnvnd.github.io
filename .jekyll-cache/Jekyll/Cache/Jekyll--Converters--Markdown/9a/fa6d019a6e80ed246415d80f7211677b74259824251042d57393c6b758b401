@@ -1,0 +1,9 @@
+I"‹<h1 id="hello-world">Hello, world!</h1>
+<p>Welcome to Datacrunch, a place to discuss programming, data science, and reverse engineering.</p>
+
+<h2 id="python">Python</h2>
+<p>Start by downloading and install Python from <a href="https://www.python.org/downloads" title="Offical Python Website">https://www.python.org/downloads</a> and run IDLE:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">"Hello, world!"</span><span class="p">)</span>
+</code></pre></div></div>
+<p><img src="/img/hello-world/02.png" alt="Hello, world" /></p>
+:ET

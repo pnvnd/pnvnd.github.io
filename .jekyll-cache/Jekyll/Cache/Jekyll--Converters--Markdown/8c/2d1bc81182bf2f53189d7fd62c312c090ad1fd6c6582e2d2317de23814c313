@@ -1,0 +1,33 @@
+I"“<h1 id="data-visualization">Data Visualization</h1>
+<p>Start by getting copying the following template to get a chart with labels.</p>
+
+<script src="https://gist.github.com/pnvnd/1a29b507baf8f07d427f7cf3be932b6d.js"></script>
+
+<p>For the data processing part, Iâ€™m using the dataset from the Ontario Government for COVID testing:<br />
+<code class="language-plaintext highlighter-rouge">filename = "https://data.ontario.ca/dataset/f4f86e54-872d-43f8-8a86-3892fd3cb5e6/resource/ed270bb8-340b-41f9-a7c6-e8ef587e6d11/download/covidtesting.csv"</code></p>
+
+<p>To process the data, I used columns 1, 5, and 6 (Reported Date, Confirmed Positive, Deaths):</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Get dates, case and death counts from CSV file.
+</span><span class="n">dates</span><span class="p">,</span> <span class="n">casesOnt</span><span class="p">,</span> <span class="n">deaths</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+    <span class="n">current_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">"%Y-%m-%d"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s">""</span><span class="p">:</span>
+        <span class="n">caseOnt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">caseOnt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span><span class="s">""</span><span class="p">:</span>
+        <span class="n">death</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">death</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+    
+    <span class="n">dates</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_date</span><span class="p">)</span>
+    <span class="n">casesOnt</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">caseOnt</span><span class="p">)</span>
+    <span class="n">deaths</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">death</span><span class="p">)</span>
+</code></pre></div></div>
+<p>The result is a chart that looks like this:
+<img src="https://github.com/pnvnd/Ontario-COVID-19/raw/master/covid_cases_deaths.png" alt="Ontario COVID-19" /></p>
+
+<p>Check out <a href="https://github.com/pnvnd/Ontario-COVID-19.git">the repository on Github</a>.</p>
+:ET
