@@ -1,0 +1,4 @@
+I"<h1 id="template-script">Template Script</h1>
+<p>Configuring SQL Server repeatedly can take up a lot of time.  Here’s a script I use to configure SQL Server instances after installing.
+<script src="https://gist.github.com/pnvnd/690146b33c353daafc51042aac3520bb.js"></script></p>
+:ET

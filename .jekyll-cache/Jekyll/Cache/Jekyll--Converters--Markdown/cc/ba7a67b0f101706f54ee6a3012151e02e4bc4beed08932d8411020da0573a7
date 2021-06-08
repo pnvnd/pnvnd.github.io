@@ -1,0 +1,19 @@
+I"]<h1 id="formula">Formula</h1>
+<p>Based on the Grade Point Average to Percentages given in the Faculty of Science and Engineering Calendar in 2011, we use polynomial regression in Excel to get the following equation:</p>
+
+<p><code class="language-plaintext highlighter-rouge">f(x) = 0.0076*(x**5)-0.1541*(x**4)+1.154*(x**3)-3.9327*(x**2)+11.017*(x)+38.958</code></p>
+
+<h2 id="python">Python</h2>
+<p>Here’s a quick and easy way to implement this in Python 3:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">yorku_percent</span><span class="p">(</span><span class="n">cpga</span><span class="p">):</span>
+    <span class="s">"""
+    Calculates grade percentage from CGPA based on Faculty of Science and Engineering Calendar.
+    """</span>
+    <span class="k">if</span> <span class="n">cpga</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">cpga</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"Invalid GPA"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">percent</span> <span class="o">=</span> <span class="mf">0.0076</span><span class="o">*</span><span class="p">(</span><span class="n">cpga</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span><span class="o">-</span><span class="mf">0.1541</span><span class="o">*</span><span class="p">(</span><span class="n">cpga</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">+</span><span class="mf">1.154</span><span class="o">*</span><span class="p">(</span><span class="n">cpga</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mf">3.9327</span><span class="o">*</span><span class="p">(</span><span class="n">cpga</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mf">11.017</span><span class="o">*</span><span class="p">(</span><span class="n">cpga</span><span class="p">)</span><span class="o">+</span><span class="mf">38.958</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"A cumulative GPA of "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cpga</span><span class="p">)</span> <span class="o">+</span> <span class="s">" is approximately "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">percent</span><span class="p">))</span> <span class="o">+</span> <span class="s">"%."</span><span class="p">)</span>
+</code></pre></div></div>
+:ET

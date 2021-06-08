@@ -1,0 +1,4 @@
+I"Ÿ<h1 id="script">Script</h1>
+<p>Many stored procedures found in SQL Server databases are obfuscated.  Use the following script to get back some code to re-create stored procedures.  Especially with SQL Server on cloud service providers, obfuscated objects (including functions) may fail during the migration to the cloud.
+<script src="https://gist.github.com/pnvnd/ee6f4364bfcf92c93d9b6d04ad8417c7.js"></script></p>
+:ET
