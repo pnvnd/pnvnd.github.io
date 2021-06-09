@@ -16,3 +16,7 @@ A number is divisible by:
 - 8 if the last three digits are divisible by 8  
 - 9 if the sum of the digits are divisible by 9  
 - 10 if the numbber ends in 0  
+
+## Python Code
+To check divisibility for a positive number with Python, try this function:  It checks the input number and performs the modulus operation to see if it's 0.  If there is no remainder, it is divisible by that number.  
+<script src="https://gist.github.com/pnvnd/934aac4db95773dbbb53bf6249ee0823.js"></script>
