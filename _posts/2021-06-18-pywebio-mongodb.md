@@ -5,6 +5,8 @@ subtitle: "Simple Webapp for Lookups"
 background: '/img/hello-world/01.jpg'
 ---
 
+![Demo](/img/pywebio-pymongo/00.png)
+
 # PyWebIO
 Start by installing PyWebIO using `pip install -U PyWebIO` and importing the following modules:
 ```python
@@ -80,6 +82,8 @@ When a user clicks submit, a loading animation is displayed while connecting to 
 ## Starting a Session
 We attempt to start a session by listing the collections in a MongoDB database. If connection to MongoDB is unsuccessful, we add a counter for the number of attempts, show an error message, then let the user try logging in again.  If the number of attempts exceeds a specific number, in this case 1 attempt, display an error page.  Otherwise, if there is no errors when making the connection to MongoDB, show a successful message, and show the "customer lookup" input box.
 
+![Authorized](/img/pywebio-pymongo/05.png)
+
 ```python
 # Start session
 def session(attempts=0):
@@ -143,6 +147,7 @@ Since we get back JSON data from MongoDB, we can use `pandas` to format the data
             html = fig.to_html(include_plotlyjs="require", full_html=False)
             put_html(html)
 ```
+![Lookup](/img/pywebio-pymongo/06.png)
 
 ## Page Layout
 Finally, time to add webapp flow.  Inthis case, the webapp starts by displaying a warning popup, then attempts to start a session.

@@ -1,4 +1,6 @@
-I"VH<h1 id="pywebio">PyWebIO</h1>
+I"I<p><img src="/img/pywebio-pymongo/00.png" alt="Demo" /></p>
+
+<h1 id="pywebio">PyWebIO</h1>
 <p>Start by installing PyWebIO using <code class="language-plaintext highlighter-rouge">pip install -U PyWebIO</code> and importing the following modules:</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pywebio.output</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pywebio.input</span> <span class="kn">import</span> <span class="o">*</span>
@@ -69,6 +71,8 @@
 <h2 id="starting-a-session">Starting a Session</h2>
 <p>We attempt to start a session by listing the collections in a MongoDB database. If connection to MongoDB is unsuccessful, we add a counter for the number of attempts, show an error message, then let the user try logging in again.  If the number of attempts exceeds a specific number, in this case 1 attempt, display an error page.  Otherwise, if there is no errors when making the connection to MongoDB, show a successful message, and show the “customer lookup” input box.</p>
 
+<p><img src="/img/pywebio-pymongo/05.png" alt="Authorized" /></p>
+
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Start session
 </span><span class="k">def</span> <span class="nf">session</span><span class="p">(</span><span class="n">attempts</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">attempts</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="n">put_markdown</span><span class="p">(</span><span class="s">'# Not authorized!'</span><span class="p">)</span>
@@ -128,6 +132,7 @@
             <span class="n">html</span> <span class="o">=</span> <span class="n">fig</span><span class="p">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">include_plotlyjs</span><span class="o">=</span><span class="s">"require"</span><span class="p">,</span> <span class="n">full_html</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
             <span class="n">put_html</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
 </code></pre></div></div>
+<p><img src="/img/pywebio-pymongo/06.png" alt="Lookup" /></p>
 
 <h2 id="page-layout">Page Layout</h2>
 <p>Finally, time to add webapp flow.  Inthis case, the webapp starts by displaying a warning popup, then attempts to start a session.</p>
