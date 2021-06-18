@@ -1,0 +1,144 @@
+I"VH<h1 id="pywebio">PyWebIO</h1>
+<p>Start by installing PyWebIO using <code class="language-plaintext highlighter-rouge">pip install -U PyWebIO</code> and importing the following modules:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pywebio.output</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pywebio.input</span> <span class="kn">import</span> <span class="o">*</span>
+</code></pre></div></div>
+<p><img src="/img/pywebio-pymongo/01.png" alt="Prerequisites" /></p>
+
+<h2 id="popups">Popups</h2>
+<p>To start your webapp with a warning popup, for privacy policy or cookies usage for example, try this:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Initial Popup message
+</span><span class="k">def</span> <span class="nf">warning</span><span class="p">():</span>
+    <span class="n">popup</span><span class="p">(</span><span class="s">"Terms of Service"</span><span class="p">,</span> <span class="p">[</span>
+        <span class="n">put_text</span><span class="p">(</span><span class="s">"Access authorized for employees only. This system is monitored and uses cookies."</span><span class="p">),</span>
+        <span class="n">put_buttons</span><span class="p">([</span><span class="s">"Agree"</span><span class="p">],</span> <span class="n">onclick</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">close_popup</span><span class="p">())</span>
+    <span class="p">])</span>
+</code></pre></div></div>
+<p><img src="/img/pywebio-pymongo/02.png" alt="Popup" /></p>
+
+<h2 id="login-screen">Login Screen</h2>
+<p>You can make a login screen using <code class="language-plaintext highlighter-rouge">input_group</code> to get username and password input and store in a dictionary object.  As well, you can add radio buttons to change the options for logging in.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
+    <span class="n">credentials</span> <span class="o">=</span> <span class="n">input_group</span><span class="p">(</span><span class="s">"MongoDB Portal"</span><span class="p">,</span> <span class="p">[</span>
+        <span class="nb">input</span><span class="p">(</span><span class="s">"Username"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">"username"</span><span class="p">),</span>
+        <span class="nb">input</span><span class="p">(</span><span class="s">"Password"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">"password"</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">PASSWORD</span><span class="p">,</span>
+            <span class="n">placeholder</span><span class="o">=</span><span class="s">"Enter your password"</span><span class="p">,</span>
+            <span class="n">help_text</span><span class="o">=</span><span class="s">"Please contact IT Support for access."</span><span class="p">,</span>
+            <span class="n">required</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="p">),</span>
+        <span class="n">radio</span><span class="p">(</span><span class="s">"Environment"</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s">"PROD"</span><span class="p">,</span> <span class="s">"QA"</span><span class="p">,</span> <span class="s">"DEV"</span><span class="p">],</span> <span class="n">value</span><span class="o">=</span><span class="s">"PROD"</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">"env"</span><span class="p">)</span>
+        <span class="p">])</span>
+</code></pre></div></div>
+
+<p><img src="/img/pywebio-pymongo/03.png" alt="Login" /></p>
+
+<h2 id="authenticate-with-mongodb">Authenticate with MongoDB</h2>
+<p>When a user clicks submit, a loading animation is displayed while connecting to MongoDB.  You’ll need <code class="language-plaintext highlighter-rouge">PyMongo</code> for this, so you can install it with <code class="language-plaintext highlighter-rouge">pip install pymongo</code>.  Remember to import this module  before proceeding.  In this example, we use the sample data from MongoDB’s <code class="language-plaintext highlighter-rouge">sample_analytics</code> database.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1"># Show loading animation while connecting to MongoDB
+</span>    <span class="k">with</span> <span class="n">put_loading</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="s">'border'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'dark'</span><span class="p">):</span>
+        
+        <span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
+        
+        <span class="n">username</span> <span class="o">=</span> <span class="n">credentials</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"username"</span><span class="p">)</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">credentials</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"password"</span><span class="p">)</span>
+
+        <span class="k">global</span> <span class="n">env</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">db</span> <span class="c1"># Need these global variables later
+</span>        <span class="n">env</span> <span class="o">=</span> <span class="n">credentials</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"env"</span><span class="p">)</span>
+        <span class="n">database</span> <span class="o">=</span> <span class="s">"sample_analytics"</span>
+
+        <span class="c1"># Radio button options
+</span>        <span class="k">if</span> <span class="n">env</span> <span class="o">==</span> <span class="s">"PROD"</span><span class="p">:</span>
+            <span class="n">host</span> <span class="o">=</span> <span class="s">"prod.cluster.mongodb.net/"</span>
+        <span class="k">elif</span> <span class="n">env</span> <span class="o">==</span><span class="s">"QA"</span><span class="p">:</span>
+            <span class="n">host</span> <span class="o">=</span> <span class="s">"qa.cluster.mongodb.net/"</span>
+        <span class="k">elif</span> <span class="n">env</span> <span class="o">==</span> <span class="s">"DEV"</span><span class="p">:</span>
+            <span class="n">host</span> <span class="o">=</span> <span class="s">"dev.cluster.mongodb.net/"</span>
+
+        <span class="n">uri</span> <span class="o">=</span> <span class="p">(</span><span class="s">"mongodb+srv://"</span> <span class="o">+</span> <span class="n">username</span> <span class="o">+</span> <span class="s">":"</span> <span class="o">+</span> <span class="n">password</span> <span class="o">+</span> <span class="s">"@"</span> <span class="o">+</span> <span class="n">host</span> <span class="o">+</span> <span class="n">database</span><span class="p">)</span>
+        <span class="n">cluster</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">cluster</span><span class="p">[</span><span class="n">database</span><span class="p">]</span>
+
+        <span class="c1"># Use this to check if connection to MongoDB is successful
+</span>        <span class="n">collections</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">list_collection_names</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/img/pywebio-pymongo/04.png" alt="Unauthorized" /></p>
+
+<h2 id="starting-a-session">Starting a Session</h2>
+<p>We attempt to start a session by listing the collections in a MongoDB database. If connection to MongoDB is unsuccessful, we add a counter for the number of attempts, show an error message, then let the user try logging in again.  If the number of attempts exceeds a specific number, in this case 1 attempt, display an error page.  Otherwise, if there is no errors when making the connection to MongoDB, show a successful message, and show the “customer lookup” input box.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Start session
+</span><span class="k">def</span> <span class="nf">session</span><span class="p">(</span><span class="n">attempts</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">attempts</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="n">put_markdown</span><span class="p">(</span><span class="s">'# Not authorized!'</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">attempts</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="n">toast</span><span class="p">(</span><span class="s">"Incorrect username, password, and environment combination."</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"error"</span><span class="p">)</span>
+        <span class="n">session</span><span class="p">(</span><span class="n">attempts</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">toast</span><span class="p">(</span><span class="s">"Successfully connected to "</span> <span class="o">+</span> <span class="n">env</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"success"</span><span class="p">)</span>
+        <span class="n">put_markdown</span><span class="p">(</span><span class="s">"# MongoDB Portal"</span><span class="p">)</span>
+        <span class="n">getCustomers</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="pinned-items">Pinned Items</h2>
+<p>You can pin input fields with the following.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">getCustomers</span><span class="p">():</span>
+        <span class="n">put_markdown</span><span class="p">(</span><span class="s">"## Customer Lookup"</span><span class="p">)</span>
+        <span class="n">put_input</span><span class="p">(</span><span class="s">"accounts"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">NUMBER</span><span class="p">)</span>
+        <span class="n">put_buttons</span><span class="p">([</span><span class="s">"Lookup"</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">lookupAccounts</span><span class="p">(</span><span class="n">pin</span><span class="p">.</span><span class="n">accounts</span><span class="p">))</span>
+        <span class="n">hold</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="lookup-function">Lookup Function</h2>
+<p>THe lookup function takes <code class="language-plaintext highlighter-rouge">account_number</code> input from the user and the <code class="language-plaintext highlighter-rouge">customers</code> variable is mapped to the customers collection in MongoDB.  Then, we build a pipeline to get JSON data from MongoDB.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">lookupAccounts</span><span class="p">(</span><span class="n">account_number</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">use_scope</span><span class="p">(</span><span class="s">'search_result'</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">put_loading</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="s">'border'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'dark'</span><span class="p">):</span>
+            <span class="n">customers</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">customers</span>
+
+            <span class="n">pipeline</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">{</span> <span class="s">"$match"</span> <span class="p">:</span> 
+                    <span class="p">{</span> <span class="s">"$and"</span> <span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span> <span class="s">"accounts"</span><span class="p">:</span> <span class="n">account_number</span> <span class="p">},</span> 
+                    <span class="p">]}</span>
+                <span class="p">},</span>
+                <span class="p">{</span> <span class="s">"$project"</span> <span class="p">:</span> <span class="p">{</span> <span class="s">"_id"</span><span class="p">:</span> <span class="mi">0</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="visualization">Visualization</h2>
+<p>Since we get back JSON data from MongoDB, we can use <code class="language-plaintext highlighter-rouge">pandas</code> to format the dataframe, then use it to make charts or tables.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>            <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">customers</span><span class="p">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)))</span>
+            <span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="n">tolist</span><span class="p">()</span>
+            
+            <span class="c1"># Show interactive data visualizations
+</span>            <span class="kn">from</span> <span class="nn">pywebio.output</span> <span class="kn">import</span> <span class="n">put_html</span>
+            <span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="n">go</span>
+            
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="p">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">go</span><span class="p">.</span><span class="n">Table</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s">"Customer Info"</span><span class="p">]),</span> <span class="n">cells</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">rows</span><span class="p">))])</span>
+            <span class="n">html</span> <span class="o">=</span> <span class="n">fig</span><span class="p">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">include_plotlyjs</span><span class="o">=</span><span class="s">"require"</span><span class="p">,</span> <span class="n">full_html</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="n">put_html</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="page-layout">Page Layout</h2>
+<p>Finally, time to add webapp flow.  Inthis case, the webapp starts by displaying a warning popup, then attempts to start a session.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">warning</span><span class="p">()</span>
+<span class="n">session</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="favicon">Favicon</h2>
+<p>Feel free to change your favicon to personalize the webapp.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Change favicon.ico
+</span><span class="n">pywebio</span><span class="p">.</span><span class="n">session</span><span class="p">.</span><span class="n">run_js</span><span class="p">(</span><span class="s">"$('head link[rel=icon]').attr('href', image_url)"</span><span class="p">,</span> <span class="n">image_url</span><span class="o">=</span><span class="s">"https://www.python.org/static/favicon.ico"</span><span class="p">)</span>
+</code></pre></div></div>
+:ET
