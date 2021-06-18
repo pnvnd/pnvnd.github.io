@@ -5,7 +5,7 @@ subtitle: "Simple Webapp for Lookups"
 background: '/img/hello-world/01.jpg'
 ---
 
-![Demo](/img/pywebio-pymongo/00.png)
+![Demo](/img/pywebio-pymongo/00.gif)
 
 # PyWebIO
 Start by installing PyWebIO using `pip install -U PyWebIO` and importing the following modules:
