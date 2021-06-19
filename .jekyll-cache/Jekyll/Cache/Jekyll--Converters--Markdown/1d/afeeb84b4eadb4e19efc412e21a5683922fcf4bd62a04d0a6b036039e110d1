@@ -1,11 +1,12 @@
-I"I<p><img src="/img/pywebio-pymongo/00.gif" alt="Demo" /></p>
+I"›I<p><img src="/img/pywebio-pymongo/00.gif" alt="Demo" /></p>
 
 <h1 id="pywebio">PyWebIO</h1>
+<p><img src="/img/pywebio-pymongo/01.png" alt="Prerequisites" /></p>
+
 <p>Start by installing PyWebIO using <code class="language-plaintext highlighter-rouge">pip install -U PyWebIO</code> and importing the following modules:</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pywebio.output</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pywebio.input</span> <span class="kn">import</span> <span class="o">*</span>
 </code></pre></div></div>
-<p><img src="/img/pywebio-pymongo/01.png" alt="Prerequisites" /></p>
 
 <h2 id="popups">Popups</h2>
 <p>To start your webapp with a warning popup, for privacy policy or cookies usage for example, try this:</p>
@@ -146,4 +147,8 @@
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Change favicon.ico
 </span><span class="n">pywebio</span><span class="p">.</span><span class="n">session</span><span class="p">.</span><span class="n">run_js</span><span class="p">(</span><span class="s">"$('head link[rel=icon]').attr('href', image_url)"</span><span class="p">,</span> <span class="n">image_url</span><span class="o">=</span><span class="s">"https://www.python.org/static/favicon.ico"</span><span class="p">)</span>
 </code></pre></div></div>
+
+<h2 id="complete-code">Complete Code</h2>
+<script src="https://gist.github.com/pnvnd/bc708b51e3a02b8707562d59ad282ab6.js"></script>
+
 :ET

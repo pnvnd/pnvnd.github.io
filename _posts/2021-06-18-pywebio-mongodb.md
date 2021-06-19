@@ -8,12 +8,14 @@ background: '/img/hello-world/01.jpg'
 ![Demo](/img/pywebio-pymongo/00.gif)
 
 # PyWebIO
+![Prerequisites](/img/pywebio-pymongo/01.png)
+
 Start by installing PyWebIO using `pip install -U PyWebIO` and importing the following modules:
 ```python
 from pywebio.output import *
 from pywebio.input import *
 ```
-![Prerequisites](/img/pywebio-pymongo/01.png)
+
 
 ## Popups
 To start your webapp with a warning popup, for privacy policy or cookies usage for example, try this:
@@ -163,3 +165,6 @@ Feel free to change your favicon to personalize the webapp.
 # Change favicon.ico
 pywebio.session.run_js("$('head link[rel=icon]').attr('href', image_url)", image_url="https://www.python.org/static/favicon.ico")
 ```
+
+## Complete Code
+<script src="https://gist.github.com/pnvnd/bc708b51e3a02b8707562d59ad282ab6.js"></script>
