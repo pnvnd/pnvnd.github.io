@@ -1,12 +1,14 @@
 ---
 layout: post
-title: "Monitor Synology DSM 6.2 with New Relic"
-subtitle: "Welcome to Datacrunch"
+title: "Monitor Synology with New Relic"
+subtitle: "Linux (Upstart) Infrastructure Agent Install"
 background: '/img/newrelic-synology/newrelic_synology_01.png'
 ---
 
 # Monitoring Synology DSM Infrastructure
 Synology DSM is a custom build of Linux using Upstart.  Follow the [tarball assisted install for the New Relic Infrastructure Agent on Synology](https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/linux-installation/tarball-assisted-install-infrastructure-agent-linux)
+
+In this example, I use a Synology DS214play device with DSM 6.2 installed.
 
 ## Summary for Intel Atom Devices
 Start by enabling SSH on your Synology device:  
