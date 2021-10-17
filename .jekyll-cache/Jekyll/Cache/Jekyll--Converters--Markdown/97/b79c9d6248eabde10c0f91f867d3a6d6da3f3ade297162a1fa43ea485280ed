@@ -1,0 +1,31 @@
+I"Ë	<h1 id="monitoring-synology-dsm-infrastructure">Monitoring Synology DSM Infrastructure</h1>
+<p>Synology DSM is a custom build of Linux using Upstart.  Follow the <a href="https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/linux-installation/tarball-assisted-install-infrastructure-agent-linux">tarball assisted install for the New Relic Infrastructure Agent on Synology</a></p>
+
+<h2 id="summary-for-intel-atom-based-synology">Summary for Intel Atom Based Synology</h2>
+<p>Start by enabling SSH on your Synology device:</p>
+<ol>
+  <li>Control Panel</li>
+  <li>Terminal &amp; SNMP</li>
+  <li>Terminal &gt; Enable SSH Service</li>
+</ol>
+
+<p>Next, open your terminal and enter <code class="language-plaintext highlighter-rouge">ssh user@synology</code>.  You may get an error message saying your home directory does not exist and will start at the room directory <code class="language-plaintext highlighter-rouge">/</code>.</p>
+<ol>
+  <li>Download the Intel x86 New Relic Infrastructure Agent: <code class="language-plaintext highlighter-rouge">sudo curl https://download.newrelic.com/infrastructure_agent/binaries/linux/386/newrelic-infra_linux_1.20.4_386.tar.gz --output newrelic-infra_linux_1.20.4_386.tar.gz</code></li>
+  <li>Extract: <code class="language-plaintext highlighter-rouge">sudo tar -xf newrelic-infra_linux_1.20.4_386.tar.gz</code></li>
+  <li>Append your New Relic license key (or edit in <code class="language-plaintext highlighter-rouge">vi</code>): <code class="language-plaintext highlighter-rouge">echo "license_key: a1b2c3d4e5f6g6h7i7j8k9l0m9n8o7p6q5r4NRAL" | sudo tee -a /etc/newrelic-infra/config_defaults.sh</code></li>
+  <li>Run installer script: <code class="language-plaintext highlighter-rouge">sudo /etc/newrelic-infra/installer.sh</code></li>
+  <li>Check if service is running: <code class="language-plaintext highlighter-rouge">sudo initctl status newrelic-infra</code></li>
+  <li>If service is not running, try restarting: <code class="language-plaintext highlighter-rouge">sudo initctl restart newrelic-infra</code></li>
+</ol>
+
+<h2 id="infrastructure-data-captured">Infrastructure Data Captured</h2>
+<ol>
+  <li>System: CPU %, Load Average, Memory Free %</li>
+  <li>Network: Transmit/Receive Bytes per Second, Errors per Second</li>
+  <li>Processes: N/A</li>
+  <li>Storage: Disk Used %, Total Utilization %, Read/Write Bytes per Second</li>
+</ol>
+
+<p><img src="/img/newrelic-synology/newrelic_synology_01.png" alt="New Relic Synology Screenshot" /></p>
+:ET
