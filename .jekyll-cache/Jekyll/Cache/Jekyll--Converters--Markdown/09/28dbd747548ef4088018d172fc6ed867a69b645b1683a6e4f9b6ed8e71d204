@@ -1,5 +1,7 @@
-I"D<h1 id="monitoring-synology-dsm-infrastructure">Monitoring Synology DSM Infrastructure</h1>
-<p>Synology DSM is a custom build of Linux using Upstart.  Follow the <a href="https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/linux-installation/tarball-assisted-install-infrastructure-agent-linux">tarball assisted install for the New Relic Infrastructure Agent on Synology</a></p>
+I"„<h1 id="monitoring-synology-dsm-infrastructure">Monitoring Synology DSM Infrastructure</h1>
+<p>Synology DSM is a custom build of Linux using Upstart.  Follow the <a href="https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/linux-installation/tarball-assisted-install-infrastructure-agent-linux">tarball assisted install for the New Relic Infrastructure Agent on Synology</a> to start monitoring Synology devices without Docker.</p>
+
+<p>In this example, I use a Synology DS214play device with DSM 6.2 installed.</p>
 
 <h2 id="summary-for-intel-atom-devices">Summary for Intel Atom Devices</h2>
 <p>Start by enabling SSH on your Synology device:</p>
@@ -8,6 +10,8 @@
   <li>Terminal &amp; SNMP</li>
   <li>Terminal &gt; Enable SSH Service</li>
 </ol>
+
+<p><img src="/img/newrelic-synology/newrelic_synology_00.png" alt="Synology Screenshot 1" /></p>
 
 <p>Next, open your terminal and enter <code class="language-plaintext highlighter-rouge">ssh user@synology</code>.  You may get an error message saying your home directory does not exist and will start at the room directory <code class="language-plaintext highlighter-rouge">/</code>.</p>
 <ol>
@@ -19,18 +23,22 @@
   <li>If service is not running, try restarting: <code class="language-plaintext highlighter-rouge">sudo initctl restart newrelic-infra</code></li>
 </ol>
 
+<p><img src="/img/newrelic-synology/newrelic_synology_02.png" alt="Synology Screenshot 2" /></p>
+
 <h2 id="infrastructure-data-captured">Infrastructure Data Captured</h2>
 <ol>
   <li>System: CPU %, Load Average, Memory Free %</li>
   <li>Network: Transmit/Receive Bytes per Second, Errors per Second</li>
   <li>Processes: N/A</li>
   <li>Storage: Disk Used %, Total Utilization %, Read/Write Bytes per Second</li>
+  <li>Events</li>
 </ol>
 
-<p><img src="/img/newrelic-synology/newrelic_synology_01.png" alt="New Relic Synology Screenshot" /></p>
+<p><img src="/img/newrelic-synology/newrelic_synology_01.png" alt="New Relic Screenshot 1" /></p>
 
 <h2 id="dashboards">Dashboards</h2>
-<p>Here are some useful dashboards and their NRQL query:</p>
+<p>Here are some useful dashboards and their NRQL query
+<img src="/img/newrelic-synology/newrelic_synology_03.png" alt="New Relic Screenshot 2" /></p>
 
 <h3 id="cpu-">CPU %</h3>
 
@@ -67,4 +75,10 @@
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(transmitBytesPerSecond), average(receiveBytesPerSecond), average(receiveErrorsPerSecond) FROM NetworkSample WHERE entityName = 'DATACRUNCH' timeseries
 </code></pre></div></div>
 <iframe src="https://chart-embed.service.newrelic.com/herald/5794cdd9-7fb3-436b-8848-fea1478f5b7c" title="CPU %" width="100%" height="400"></iframe>
+
+<h3 id="events">Events</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select changeType, changedPath, source, summary from InfrastructureEvent since 24 hours ago
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/3aeefe03-6d1d-4a9b-a9c9-29c07728346c" title="CPU %" width="100%" height="400"></iframe>
 :ET

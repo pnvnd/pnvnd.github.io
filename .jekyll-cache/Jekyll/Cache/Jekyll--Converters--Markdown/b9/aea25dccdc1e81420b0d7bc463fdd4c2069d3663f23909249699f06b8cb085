@@ -1,3 +1,0 @@
-I"’<h1 id="monitoring-synology-dsm-infrastructure">Monitoring Synology DSM Infrastructure</h1>
-<p>Synology DSM is a custom build of Linux using Upstart.  Follow the <a href="https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/linux-installation/tarball-assisted-install-infrastructure-agent-linux">tarball assisted install for the New Relic Infrastructure Agent on Synology</a></p>
-:ET
