@@ -31,7 +31,7 @@ Next, open your terminal and enter `ssh user@synology`.  You may get an error me
 ## Infrastructure Data Captured
 1. System: CPU %, Load Average, Memory Free %
 2. Network: Transmit/Receive Bytes per Second, Errors per Second
-3. Processes: N/A
+3. Processes: Not reported by default.  To enable, `echo "enable_process_metrics: true" | sudo tee -a /etc/newrelic-infra.yml` and restart service
 4. Storage: Disk Used %, Total Utilization %, Read/Write Bytes per Second
 5. Events
 
@@ -89,3 +89,9 @@ SELECT average(transmitBytesPerSecond), average(receiveBytesPerSecond), average(
 select changeType, changedPath, source, summary from InfrastructureEvent since 24 hours ago
 ```
 <iframe src="https://chart-embed.service.newrelic.com/herald/3aeefe03-6d1d-4a9b-a9c9-29c07728346c" title="CPU %" width="100%" height="400"></iframe> 
+
+### Processes
+```
+SELECT max(cpuPercent) FROM ProcessSample TIMESERIES FACET processDisplayName
+```
+<iframe src="https://chart-embed.service.newrelic.com/herald/bb8a0b8a-0195-4c3e-ad8c-e2e4b38e9855" title="CPU %" width="100%" height="400"></iframe>
