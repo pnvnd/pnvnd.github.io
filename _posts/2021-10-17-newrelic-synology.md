@@ -18,7 +18,7 @@ Start by enabling SSH on your Synology device:
 
 ![Synology Screenshot 1](/img/newrelic-synology/newrelic_synology_00.png)
 
-Next, open your terminal and enter `ssh user@synology`.  You may get an error message saying your home directory does not exist and will start at the room directory `/`.
+Next, open your terminal and enter `ssh user@synology`.  You may get an error message saying your home directory does not exist and will start at the root directory `/`.
 1. Download the Intel x86 New Relic Infrastructure Agent: `sudo curl https://download.newrelic.com/infrastructure_agent/binaries/linux/386/newrelic-infra_linux_1.20.4_386.tar.gz --output newrelic-infra_linux_1.20.4_386.tar.gz`
 2. Extract: `sudo tar -xf newrelic-infra_linux_1.20.4_386.tar.gz`
 3. Append your New Relic license key (or edit in `vi`): `echo "license_key: a1b2c3d4e5f6g6h7i7j8k9l0m9n8o7p6q5r4NRAL" | sudo tee -a /etc/newrelic-infra/config_defaults.sh`

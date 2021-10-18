@@ -13,7 +13,7 @@
 
 <p><img src="/img/newrelic-synology/newrelic_synology_00.png" alt="Synology Screenshot 1" /></p>
 
-<p>Next, open your terminal and enter <code class="language-plaintext highlighter-rouge">ssh user@synology</code>.  You may get an error message saying your home directory does not exist and will start at the room directory <code class="language-plaintext highlighter-rouge">/</code>.</p>
+<p>Next, open your terminal and enter <code class="language-plaintext highlighter-rouge">ssh user@synology</code>.  You may get an error message saying your home directory does not exist and will start at the root directory <code class="language-plaintext highlighter-rouge">/</code>.</p>
 <ol>
   <li>Download the Intel x86 New Relic Infrastructure Agent: <code class="language-plaintext highlighter-rouge">sudo curl https://download.newrelic.com/infrastructure_agent/binaries/linux/386/newrelic-infra_linux_1.20.4_386.tar.gz --output newrelic-infra_linux_1.20.4_386.tar.gz</code></li>
   <li>Extract: <code class="language-plaintext highlighter-rouge">sudo tar -xf newrelic-infra_linux_1.20.4_386.tar.gz</code></li>
