@@ -95,3 +95,5 @@ select changeType, changedPath, source, summary from InfrastructureEvent since 2
 SELECT max(cpuPercent) FROM ProcessSample TIMESERIES FACET processDisplayName
 ```
 <iframe src="https://chart-embed.service.newrelic.com/herald/bb8a0b8a-0195-4c3e-ad8c-e2e4b38e9855" title="CPU %" width="100%" height="400"></iframe>
+
+![New Relic Screenshot 32](/img/newrelic-synology/newrelic_synology_04.png)
