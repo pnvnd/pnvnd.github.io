@@ -119,3 +119,6 @@ SELECT max(cpuPercent) FROM ProcessSample TIMESERIES FACET processDisplayName
 <iframe src="https://chart-embed.service.newrelic.com/herald/bb8a0b8a-0195-4c3e-ad8c-e2e4b38e9855" title="CPU %" width="100%" height="400"></iframe><br><br>
 
 ![New Relic Screenshot 32](/img/newrelic-synology/newrelic_synology_04.png)
+
+## Cost Summary
+After enabling the infrastructure agent for 2 days, only 100 MB of data was ingested per day.  This works out to about 3GB per month ingested, far below the 100GB included in the free-tier account.

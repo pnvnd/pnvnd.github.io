@@ -1,4 +1,4 @@
-I"\<h1 id="monitoring-synology-dsm-infrastructure">Monitoring Synology DSM Infrastructure</h1>
+I"R<h1 id="monitoring-synology-dsm-infrastructure">Monitoring Synology DSM Infrastructure</h1>
 <p>Synology DSM is a custom build of Linux using Upstart.  Follow the <a href="https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/linux-installation/tarball-assisted-install-infrastructure-agent-linux">tarball assisted install for the New Relic Infrastructure Agent on Synology</a> to start monitoring Synology devices without Docker.</p>
 
 <p>In this example, I use a Synology DS214play device (32-bit Intel Processor) with DSM 6.2 installed.</p>
@@ -136,4 +136,7 @@
 <p><br /><br /></p>
 
 <p><img src="/img/newrelic-synology/newrelic_synology_04.png" alt="New Relic Screenshot 32" /></p>
+
+<h2 id="cost-summary">Cost Summary</h2>
+<p>After enabling the infrastructure agent for 2 days, only 100 MB of data was ingested per day.  This works out to about 3GB per month ingested, far below the 100GB included in the free-tier account.</p>
 :ET
