@@ -26,7 +26,7 @@ Next, open your terminal and enter `ssh user@synology`.  You may get an error me
  `sudo tar -xf newrelic-infra_linux_1.20.4_386.tar.gz`
 
 3. Append your New Relic license key (or edit in `vi`):  
- `echo "license_key: a1b2c3d4e5f6g6h7i7j8k9l0m9n8o7p6q5r4NRAL" | sudo tee -a /etc/newrelic-infra/config_defaults.sh`
+ `echo "license_key=\"a1b2c3d4e5f6g6h7i7j8k9l0m9n8o7p6q5r4NRAL\"" | sudo tee -a /etc/newrelic-infra/config_defaults.sh`
 
 4. Run installer script:  
 `sudo /etc/newrelic-infra/installer.sh`

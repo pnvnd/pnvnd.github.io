@@ -1,4 +1,4 @@
-I"R<h1 id="monitoring-synology-dsm-infrastructure">Monitoring Synology DSM Infrastructure</h1>
+I"U<h1 id="monitoring-synology-dsm-infrastructure">Monitoring Synology DSM Infrastructure</h1>
 <p>Synology DSM is a custom build of Linux using Upstart.  Follow the <a href="https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/linux-installation/tarball-assisted-install-infrastructure-agent-linux">tarball assisted install for the New Relic Infrastructure Agent on Synology</a> to start monitoring Synology devices without Docker.</p>
 
 <p>In this example, I use a Synology DS214play device (32-bit Intel Processor) with DSM 6.2 installed.</p>
@@ -25,7 +25,7 @@
   </li>
   <li>
     <p>Append your New Relic license key (or edit in <code class="language-plaintext highlighter-rouge">vi</code>):<br />
- <code class="language-plaintext highlighter-rouge">echo "license_key: a1b2c3d4e5f6g6h7i7j8k9l0m9n8o7p6q5r4NRAL" | sudo tee -a /etc/newrelic-infra/config_defaults.sh</code></p>
+ <code class="language-plaintext highlighter-rouge">echo "license_key=\"a1b2c3d4e5f6g6h7i7j8k9l0m9n8o7p6q5r4NRAL\"" | sudo tee -a /etc/newrelic-infra/config_defaults.sh</code></p>
   </li>
   <li>
     <p>Run installer script:<br />
