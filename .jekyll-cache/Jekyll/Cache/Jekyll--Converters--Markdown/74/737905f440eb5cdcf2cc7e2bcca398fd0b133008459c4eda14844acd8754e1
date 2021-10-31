@@ -1,0 +1,154 @@
+I"¹&<h1 id="monitoring-raspberry-pi-os-infrastructure">Monitoring Raspberry Pi OS Infrastructure</h1>
+<p>Raspberry Pi OS custom build of Debian (Linux).  Follow the <a href="https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/linux-installation/tarball-assisted-install-infrastructure-agent-linux">tarball assisted install for the New Relic Infrastructure Agent on Synology</a> to start monitoring Raspberry Pi devices without Docker.</p>
+
+<p>In this example, I use a Raspberry Pi 4B (8GB) device with Rasbberry Pi OS Lite (32-bit) installed.
+<img src="/img/newrelic_raspberrypi4/nr_rpi4_00.png" alt="Raspberry Pi 4 Screenshot 1" /></p>
+
+<h2 id="summary-for-raspberry-pi-devices">Summary for Raspberry Pi Devices</h2>
+<p>Start by enabling SSH on your Raspberry Pi device:</p>
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">sudo raspi-config</code></li>
+  <li>Select <code class="language-plaintext highlighter-rouge">Interface Options</code> and press <code class="language-plaintext highlighter-rouge">ENTER</code>
+<img src="/img/newrelic_raspberrypi4/nr_rpi4_00a.png" alt="Raspberry Pi 4 Screenshot 2" /></li>
+  <li>Select <code class="language-plaintext highlighter-rouge">P2 SSH</code> amd press <code class="language-plaintext highlighter-rouge">ENTER</code>
+<img src="/img/newrelic_raspberrypi4/nr_rpi4_00b.png" alt="Raspberry Pi 4 Screenshot 3" /></li>
+  <li>Selecy <code class="language-plaintext highlighter-rouge">Yes</code> and press <code class="language-plaintext highlighter-rouge">ENTER</code>
+<img src="/img/newrelic_raspberrypi4/nr_rpi4_00c.png" alt="Raspberry Pi 4 Screenshot 4" /></li>
+</ol>
+
+<p>Next, open your terminal and enter <code class="language-plaintext highlighter-rouge">ssh pi@raspberrypi</code> and your password.</p>
+<ol>
+  <li>
+    <p>Download New Relic Infrastructure Agent. In this case, my Raspberry Pi 4B uses an ARM Cortex-A72 processor, so weâ€™ll need to download the ARM agent (not AMR64 agent, since our operating system is 32-bit).  If you downloaded the ARM64 infrastructure agent and installed that instead, the service fails to start.  (ARM and ARM64 variants of the New Relic Infrastructure agent are also available <a href="https://download.newrelic.com/infrastructure_agent/binaries/linux/">here</a>):<br />
+<code class="language-plaintext highlighter-rouge">sudo curl https://download.newrelic.com/infrastructure_agent/binaries/linux/arm/newrelic-infra_linux_1.20.6_arm.tar.gz --output newrelic-infra_linux_1.20.6_arm.tar.gz </code></p>
+  </li>
+  <li>
+    <p>Extract:<br />
+ <code class="language-plaintext highlighter-rouge">sudo tar -xf newrelic-infra_linux_1.20.6_arm.tar.gz</code></p>
+  </li>
+  <li>
+    <p>Append your New Relic license key (or edit in <code class="language-plaintext highlighter-rouge">vi</code>, <code class="language-plaintext highlighter-rouge">nano</code>, etc.):<br />
+ <code class="language-plaintext highlighter-rouge">echo "license_key=\"a1b2c3d4e5f6g6h7i7j8k9l0m9n8o7p6q5r4NRAL\"" | sudo tee -a ~/newrelic-infra/config_defaults.sh</code></p>
+  </li>
+  <li>
+    <p>Run installer script:<br />
+<code class="language-plaintext highlighter-rouge">sudo ~/newrelic-infra/installer.sh</code></p>
+  </li>
+  <li>
+    <p>Check if service is running:<br />
+<code class="language-plaintext highlighter-rouge">sudo systemctl status newrelic-infra</code></p>
+  </li>
+  <li>
+    <p>If service is not running, try restarting:<br />
+<code class="language-plaintext highlighter-rouge">sudo systemctl restart newrelic-infra</code></p>
+  </li>
+</ol>
+
+<p><img src="/img/newrelic_raspberrypi4/nr_rpi4_02.png" alt="Raspberry Pi 4 Screenshot 5" /></p>
+
+<h2 id="infrastructure-data-captured">Infrastructure Data Captured</h2>
+<ol>
+  <li>System
+    <ul>
+      <li>CPU %</li>
+      <li>Load Average</li>
+      <li>Memory Free %</li>
+    </ul>
+  </li>
+  <li>Network
+    <ul>
+      <li>Transmit Bytes per Second</li>
+      <li>Receive Bytes per Second</li>
+      <li>Errors per Second</li>
+    </ul>
+  </li>
+  <li>Processes: Not reported by default.
+    <ul>
+      <li>To enable, <code class="language-plaintext highlighter-rouge">echo "enable_process_metrics: true" | sudo tee -a /etc/newrelic-infra.yml</code> and restart service</li>
+    </ul>
+  </li>
+  <li>Storage:
+    <ul>
+      <li>Disk Used %</li>
+      <li>Total Utilization %</li>
+      <li>Read/Write Bytes per Second</li>
+    </ul>
+  </li>
+  <li>Events</li>
+</ol>
+
+<p><img src="/img/newrelic_raspberrypi4/nr_rpi4_03.png" alt="Raspberry Pi 4 Screenshot 6" /></p>
+
+<h3 id="limit-infrastructure-processes">Limit Infrastructure Processes</h3>
+<p>You may want to configure how frequently samples are taken for infrastructure processes, or limit processors with 0 memory to lower data ingests.  Check the New Relic documentation for the default sample rates.  The snippit below sets process samples to every 60 seconds.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "disable_zero_mem_process_filter: true" | sudo tee -a /etc/newrelic-infra.yml
+echo "metrics_system_sample_rate: 60" | sudo tee -a /etc/newrelic-infra.yml
+echo "metrics_network_sample_rate: 60" | sudo tee -a /etc/newrelic-infra.yml
+echo "metrics_process_sample_rate: 60" | sudo tee -a /etc/newrelic-infra.yml
+echo "metrics_storage_sample_rate: 60" | sudo tee -a /etc/newrelic-infra.yml
+</code></pre></div></div>
+
+<h2 id="dashboards">Dashboards</h2>
+
+<h3 id="cpu-">CPU %</h3>
+<p>Ideally, CPU% min, max, and average should be more or less the same to indicate balanced load.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(cpuPercent), min(cpuPercent), max(cpuPercent) FROM SystemSample WHERE entityName = 'raspberrypi' timeseries
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/8a143467-ffe3-4bfe-8bbd-5cd109aabd98" title="CPU %" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="average-load-five-minutes">Average Load (Five Minutes)</h3>
+<p>The average load refers to the average number of system processes, threads, or tasks that are waiting and ready for CPU time, in the last 1, 5, 15 minutes.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(loadAverageFifteenMinute), average(loadAverageFiveMinute), average(loadAverageOneMinute) FROM SystemSample WHERE entityName = 'raspberrypi' TIMESERIES
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/93d84f5e-403f-4f17-af14-2f7a1b4d449f" title="Average Load" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="memory--free">Memory % Free</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(memoryUsedBytes), average(memoryCachedBytes), average(memorySharedBytes), average(memorySlabBytes) FROM SystemSample WHERE entityName = 'raspberrypi' TIMESERIES
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/b67e5fe2-42d8-4cf1-8bd3-a081d21cb52f" title="Memory %" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="disk--usage">Disk % Usage</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(diskUsedPercent) FROM StorageSample WHERE entityName = 'raspberrypi' FACET entityAndMountPoint TIMESERIES
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/ff9e11ea-9df7-4eda-a590-ad1060e5bed4" title="Disk %" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="disk-io">Disk I/O</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(readWriteBytesPerSecond OR readBytesPerSecond+writeBytesPerSecond) FROM StorageSample WHERE hostname = 'raspberrypi' FACET entityAndMountPoint TIMESERIES
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/38abbfed-6ceb-44d8-a86f-43b7f5ba54af" title="Disk I/O" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="network-io">Network I/O</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(transmitBytesPerSecond), average(receiveBytesPerSecond), average(receiveErrorsPerSecond) FROM NetworkSample WHERE entityName = 'raspberrypi' TIMESERIES
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/5794cdd9-7fb3-436b-8848-fea1478f5b7c" title="Network I/O" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="events">Events</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT changedPath, summary, changeType, source FROM InfrastructureEvent WHERE entityName = 'raspberrypi' SINCE 72 HOURS AGO
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/71bbde4d-5c18-4f4a-8493-ab95d2fc92b4" title="Event List" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="processes">Processes</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT max(cpuPercent) FROM ProcessSample WHERE entityName = 'raspberrypi' AND processDisplayName != 'newrelic-infra' FACET processDisplayName TIMESERIES
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/585a6bbe-998d-4004-9319-16c952f04d42" title="Process CPU %" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<p><img src="/img/newrelic_raspberrypi4/nr_rpi4_05.png" alt="Raspberry Pi 4 Screenshot 6" /></p>
+
+<p>Otherwise, import this dashboard to your New Relic One account without creating these manually:<br />
+<script src="https://gist.github.com/pnvnd/388a2cbb0a0474cf56aeb2a70a20b12b.js"></script></p>
+:ET

@@ -1,0 +1,142 @@
+I"u <h1 id="monitoring-synology-dsm-infrastructure">Monitoring Synology DSM Infrastructure</h1>
+<p>Synology DSM is a custom build of Linux using Upstart.  Follow the <a href="https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/linux-installation/tarball-assisted-install-infrastructure-agent-linux">tarball assisted install for the New Relic Infrastructure Agent on Synology</a> to start monitoring Synology devices without Docker.</p>
+
+<p>In this example, I use a Synology DS214play device (32-bit Intel Processor) with DSM 6.2 installed.</p>
+
+<h2 id="summary-for-intel-atom-devices">Summary for Intel Atom Devices</h2>
+<p>Start by enabling SSH on your Synology device:</p>
+<ol>
+  <li>Control Panel</li>
+  <li>Terminal &amp; SNMP</li>
+  <li>Terminal &gt; Enable SSH Service &gt; Apply</li>
+</ol>
+
+<p><img src="/img/newrelic-synology/newrelic_synology_00.png" alt="Synology Screenshot 1" /></p>
+
+<p>Next, open your terminal and enter <code class="language-plaintext highlighter-rouge">ssh user@synology</code>.  You may get an error message saying your home directory does not exist and will start at the root directory <code class="language-plaintext highlighter-rouge">/</code>.</p>
+<ol>
+  <li>
+    <p>Download New Relic Infrastructure Agent.  In this case, my Synology DS214play uses an Intel Atom CE5335 processor which is 32-bit only (ARM and ARM64 variants of the New Relic Infrastructure agent are also available <a href="https://download.newrelic.com/infrastructure_agent/binaries/linux/">here</a>):<br />
+<code class="language-plaintext highlighter-rouge">sudo curl https://download.newrelic.com/infrastructure_agent/binaries/linux/386/newrelic-infra_linux_1.20.4_386.tar.gz --output newrelic-infra_linux_1.20.4_386.tar.gz</code></p>
+  </li>
+  <li>
+    <p>Extract:<br />
+ <code class="language-plaintext highlighter-rouge">sudo tar -xf newrelic-infra_linux_1.20.4_386.tar.gz</code></p>
+  </li>
+  <li>
+    <p>Append your New Relic license key (or edit in <code class="language-plaintext highlighter-rouge">vi</code>):<br />
+ <code class="language-plaintext highlighter-rouge">echo "license_key=\"a1b2c3d4e5f6g6h7i7j8k9l0m9n8o7p6q5r4NRAL\"" | sudo tee -a /etc/newrelic-infra/config_defaults.sh</code></p>
+  </li>
+  <li>
+    <p>Run installer script:<br />
+<code class="language-plaintext highlighter-rouge">sudo /etc/newrelic-infra/installer.sh</code></p>
+  </li>
+  <li>
+    <p>Check if service is running:<br />
+<code class="language-plaintext highlighter-rouge">sudo initctl status newrelic-infra</code></p>
+  </li>
+  <li>
+    <p>If service is not running, try restarting:<br />
+<code class="language-plaintext highlighter-rouge">sudo initctl restart newrelic-infra</code></p>
+  </li>
+</ol>
+
+<p><img src="/img/newrelic-synology/newrelic_synology_02.png" alt="Synology Screenshot 2" /></p>
+
+<h2 id="infrastructure-data-captured">Infrastructure Data Captured</h2>
+<ol>
+  <li>System
+    <ul>
+      <li>CPU %</li>
+      <li>Load Average</li>
+      <li>Memory Free %</li>
+    </ul>
+  </li>
+  <li>Network
+    <ul>
+      <li>Transmit Bytes per Second</li>
+      <li>Receive Bytes per Second</li>
+      <li>Errors per Second</li>
+    </ul>
+  </li>
+  <li>Processes: Not reported by default.
+    <ul>
+      <li>To enable, <code class="language-plaintext highlighter-rouge">echo "enable_process_metrics: true" | sudo tee -a /etc/newrelic-infra.yml</code> and restart service</li>
+    </ul>
+  </li>
+  <li>Storage:
+    <ul>
+      <li>Disk Used %</li>
+      <li>Total Utilization %</li>
+      <li>Read/Write Bytes per Second</li>
+    </ul>
+  </li>
+  <li>Events</li>
+</ol>
+
+<p><img src="/img/newrelic-synology/newrelic_synology_03.png" alt="New Relic Screenshot 1" /></p>
+
+<h2 id="dashboards">Dashboards</h2>
+<p>Here are some useful dashboards and their NRQL query.
+<img src="/img/newrelic-synology/newrelic_synology_01.png" alt="New Relic Screenshot 2" /></p>
+
+<h3 id="cpu-">CPU %</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(cpuPercent), min(cpuPercent), max(cpuPercent) FROM SystemSample WHERE entityName = 'DATACRUNCH' timeseries
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/6402b31c-bbd4-453b-ae65-4b9c72a587c9?height=400px&amp;timepicker=true" title="CPU %" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="average-load">Average Load</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(loadAverageFifteenMinute), average(loadAverageFiveMinute), average(loadAverageOneMinute) FROM SystemSample WHERE entityName = 'DATACRUNCH' TIMESERIES
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/deff37e0-516e-483d-a753-8c454755f61c?height=400px&amp;timepicker=true" title="CPU %" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="memory--free">Memory % Free</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(memoryUsedBytes), average(memoryCachedBytes), average(memorySharedBytes), average(memorySlabBytes) FROM SystemSample WHERE entityName = 'DATACRUNCH' TIMESERIES
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/eb846c6a-36df-4295-9372-8a34206a17bd?height=400px&amp;timepicker=true" title="CPU %" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="disk--usage">Disk % Usage</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(diskUsedPercent) FROM StorageSample WHERE entityName = 'DATACRUNCH' FACET entityAndMountPoint TIMESERIES
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/95d5e1cd-424b-48e1-93c6-1908901db836" title="CPU %" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="disk-io">Disk I/O</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(readWriteBytesPerSecond OR readBytesPerSecond+writeBytesPerSecond) FROM StorageSample WHERE hostname = 'DATACRUNCH' FACET entityAndMountPoint TIMESERIES
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/f051cb0b-a5a9-45d6-b247-4843e667e37c?height=400px&amp;timepicker=true" title="CPU %" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="network-io">Network I/O</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT average(transmitBytesPerSecond), average(receiveBytesPerSecond), average(receiveErrorsPerSecond) FROM NetworkSample WHERE entityName = 'DATACRUNCH' TIMESERIES
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/0724084f-2ed4-4eea-899c-c231c8b53ddc?height=400px&amp;timepicker=true" title="CPU %" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="events">Events</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT changedPath, summary, changeType, source FROM InfrastructureEvent WHERE entityName = 'DATACRUNCH' SINCE 72 HOURS AGO
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/a9e99d70-c6f6-46a0-85ca-a0bda3264b00?height=400px&amp;timepicker=true" title="CPU %" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<h3 id="processes">Processes</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT max(cpuPercent) FROM ProcessSample WHERE entityName = 'DATACRUNCH' AND processDisplayName != 'newrelic-infra' FACET processDisplayName TIMESERIES
+</code></pre></div></div>
+<iframe src="https://chart-embed.service.newrelic.com/herald/956167a9-5952-401a-92a5-5a851207b516?height=400px&amp;timepicker=true" title="CPU %" width="100%" height="400"></iframe>
+<p><br /><br /></p>
+
+<p><img src="/img/newrelic-synology/newrelic_synology_04.png" alt="New Relic Screenshot 32" /></p>
+
+<h2 id="cost-summary">Cost Summary</h2>
+<p>After enabling the infrastructure agent for 2 days, only 100 MB of data was ingested per day.  This works out to about 3GB per month ingested, far below the 100GB included in the free-tier account.</p>
+:ET

@@ -1,0 +1,3 @@
+I"Ê<h1 id="monitoring-raspberry-pi-os-infrastructure">Monitoring Raspberry Pi OS Infrastructure</h1>
+<p>Raspberry Pi OS custom build of Debian (Linux).  Follow the <a href="https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/linux-installation/tarball-assisted-install-infrastructure-agent-linux">tarball assisted install for the New Relic Infrastructure Agent on Synology</a> to start monitoring Raspberry Pi devices without Docker.</p>
+:ET
