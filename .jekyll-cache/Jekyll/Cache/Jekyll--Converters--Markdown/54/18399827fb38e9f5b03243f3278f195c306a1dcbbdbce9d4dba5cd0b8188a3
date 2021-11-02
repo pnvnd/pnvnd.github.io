@@ -1,0 +1,3 @@
+I"Y<h1 id="monitoring-heroku-apps-with-new-relic">Monitoring Heroku Apps with New Relic</h1>
+<p>For this example, I have a simple Flask application called <code class="language-plaintext highlighter-rouge">datacrunch-consulting</code> that is deployed to Heroku via GitHub integration.  Starting with GitHub, you can create a repository.  Then, use GitHub Desktop to clone/push code back to GitHub without using the command line. Linking the repository with Heroku allows the application to deploy every time a push is made to your repository, great for continuous integration / continus deployment.</p>
+:ET
