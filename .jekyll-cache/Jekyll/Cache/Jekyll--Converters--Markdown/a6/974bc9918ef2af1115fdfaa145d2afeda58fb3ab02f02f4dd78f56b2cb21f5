@@ -1,7 +1,7 @@
-I"y+<h1 id="monitoring-heroku-apps-with-new-relic">Monitoring Heroku Apps with New Relic</h1>
+I"+<h1 id="monitoring-heroku-apps-with-new-relic">Monitoring Heroku Apps with New Relic</h1>
 <p>For this example, I have a simple Flask application called <code class="language-plaintext highlighter-rouge">datacrunch-consulting</code> that is deployed to Heroku via GitHub integration.  Starting with GitHub, you can create a repository.  Then, use GitHub Desktop to clone/push code back to GitHub without using the command line. Linking the repository with Heroku allows the application to deploy every time a push is made to your repository, great for continuous integration / continus deployment.</p>
 
-<p>See GitHub repository here: (https://github.com/pnvnd/flaskapp) or use your own Heroku app.</p>
+<p>See GitHub repository here: <a href="https://github.com/pnvnd/flaskapp">https://github.com/pnvnd/flaskapp</a> or use your own Heroku app.</p>
 
 <p>We’ll need to make some adjustments to your Heroku <code class="language-plaintext highlighter-rouge">Procfile</code>:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>newrelic-admin run-program gunicorn -b "0.0.0.0:$PORT" -w 3 --chdir datacrunch-consulting webserver:flaskapp
@@ -9,11 +9,11 @@
 
 <p>We’ll go over how to setup the following in New Relic One:</p>
 <ol>
-  <li>Application Performance Monitoring (APM) - for application <a href="https://sre.google/sre-book/monitoring-distributed-systems/">golden signals</a></li>
-  <li>Browser, Real User Monitoring (RUM) - for user sessions, geographical region, and JavaScript/AJAX errors</li>
-  <li>Synthetics ping check - for monitoring application uptime</li>
-  <li>Logs - to aggregate logs from different services your application uses (logs in context)</li>
-  <li>Alerts - to send notifictions when certain thresholds are met</li>
+  <li>Application Performance Monitoring (APM) for <a href="https://sre.google/sre-book/monitoring-distributed-systems/">golden signals</a></li>
+  <li>Browser for Real User Monitoring (RUM)</li>
+  <li>Synthetics ping check for application uptime</li>
+  <li>Logs for distributed tracing</li>
+  <li>Alerts to notifiy when threshold conditions are met</li>
 </ol>
 
 <h2 id="new-relic-apm-setup">New Relic APM Setup</h2>

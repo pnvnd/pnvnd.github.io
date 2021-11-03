@@ -16,16 +16,16 @@ newrelic-admin run-program gunicorn -b "0.0.0.0:$PORT" -w 3 --chdir datacrunch-c
 ```
 
 We'll go over how to setup the following in New Relic One:
-1. Application Performance Monitoring (APM) - for application [golden signals](https://sre.google/sre-book/monitoring-distributed-systems/)
-2. Browser, Real User Monitoring (RUM) - for user sessions, geographical region, and JavaScript/AJAX errors
-3. Synthetics ping check - for monitoring application uptime
-4. Logs - to aggregate logs from different services your application uses (logs in context)
-5. Alerts - to send notifictions when certain thresholds are met
+1. Application Performance Monitoring (APM) for [golden signals](https://sre.google/sre-book/monitoring-distributed-systems/)
+2. Browser for Real User Monitoring (RUM)
+3. Synthetics ping check for application uptime
+4. Logs for distributed tracing
+5. Alerts to notifiy when threshold conditions are met
 
 
 ## New Relic APM Setup
 1. Log into Heroku and verify your account by adding a payment method
-1. Go to https://elements.heroku.com/addons/newrelic and select `New Relic APM`
+1. Go to [Heroku Add-ons](https://elements.heroku.com/addons/newrelic) and select `New Relic APM`
 1. Add-on plan: `Wayne - Free`
 1. App to provision to `datacrunch-consulting`
 1. Click `Submit Order Form`
@@ -55,9 +55,7 @@ With the APM agent installed on Heroku, you can get Real User Monitoring to trac
 ![Heroku Screenshot 5](/img/newrelic_heroku/nr1_heroku_05.png)
 
 ## New Relic Synthetics Setup
-Heroku apps on the free tier shuts down the app after 30 minutes of inactivity.  When someone accesses the Heroku app after inactivity, it will `cold start` and may take a minute to load.  Having a simple synthetics ping test every 15 minutes will keep the Heroku app up to avoid "cold starts".  
-
-Personal Heroku accounts have 550 free dyno hours each month between 5 apps.  If you verify your account with a payment method, you get an additional 450 hours free per month.  That is, 1000 dyno hours over 100 apps.  Using synthetic ping tests can keep 2 Heroku apps running without them ever going to sleep!
+Heroku apps on the free tier shuts down the app after 30 minutes of inactivity.  When someone accesses the Heroku app after inactivity, it will `cold start` and may take a minute to load.  Having a simple synthetics ping test every 15 minutes will keep the Heroku app up to avoid "cold starts". 
 
 1. Go to New Relic One > Synthetics
 1. Add monitor by giving it a name
@@ -70,7 +68,7 @@ Personal Heroku accounts have 550 free dyno hours each month between 5 apps.  If
 
 
 ## New Relic Logs Setup (Command Line)
-General Instructions here: https://docs.newrelic.com/docs/logs/forward-logs/heroku-log-forwarding/
+General Instructions [here](https://docs.newrelic.com/docs/logs/forward-logs/heroku-log-forwarding/)
 
 1. Download and install the Heorku CLI:  
 `https://devcenter.heroku.com/articles/heroku-cli`
