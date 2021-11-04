@@ -1,0 +1,122 @@
+I"�'<p>When you have multiple containers with microservices interacting with each other, you’ll need a way to manage these containers.  Common tools for container orchestration are Docker Swarm and Kubernetes.  We’ll be dealing with Kubernetes since public cloud providers recently introduced Kubernetes cluster management systems.  For example, Amazon has Elastic Kubernetes Services (EKS), Microsoft has Azure Kubernetes (AKS), and Google Cloud Platform has Google Kubernetes Engine (GKE).</p>
+
+<h1 id="summary">Summary</h1>
+<ol>
+  <li>Enable Hyper-V and create a virtual switch</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">kubectl.exe</code> to PATH environment variable</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">minikube.exe</code> to PATH environment variable</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">helm.exe</code> to PATH environment variable</li>
+  <li>Download ZIP and extract <a href="https://github.com/newrelic-experimental/pixie-lab-materials">Pixie Lab Materials</a></li>
+  <li>Get PowerShell equivalent of Bash script in repository above</li>
+  <li>Continue with <a href="https://developer.newrelic.com/collect-data/pixie/set-up-env/">tutorial</a></li>
+</ol>
+
+<h1 id="kubernetes">Kubernetes</h1>
+<p>Download the command line tool <code class="language-plaintext highlighter-rouge">kubectl.exe</code> from <a href="https://dl.k8s.io/release/v1.22.0/bin/windows/amd64/kubectl.exe">https://dl.k8s.io/release/v1.22.0/bin/windows/amd64/kubectl.exe</a></p>
+
+<p>To avoid setting up <code class="language-plaintext highlighter-rouge">PATH</code> environment variables, you can copy <code class="language-plaintext highlighter-rouge">kubectl.exe</code> to <code class="language-plaintext highlighter-rouge">C:\Windows\</code>.  Then, open a command prompt as an Administrator to make sure it works by entering: <code class="language-plaintext highlighter-rouge">kubectl version</code></p>
+
+<p>To continue, <code class="language-plaintext highlighter-rouge">kubectl.exe</code> needs to be configured with a Kubernetes cluster, and the configuration for this is found here: <code class="language-plaintext highlighter-rouge">C:\Users\%username%\.kube\config</code></p>
+
+<p>Currently, Kubernetes clusters cannot be created natively in Windows.  However, starting with Windows Server 2019 and Windows 10 version 1903, you can natively run containers based on a Windows Server 2019 image.</p>
+
+<p>In this case, we’ll be configuring <code class="language-plaintext highlighter-rouge">kubectl.exe</code> with the <code class="language-plaintext highlighter-rouge">minikube.exe</code> cluster, a Linux virtual machine with a single node primarily used for development and testing.  You can also configure <code class="language-plaintext highlighter-rouge">kubectl.exe</code> to work with an AWS cluster on EKS or AKS cluster in Azure.  The key here is to modify the <code class="language-plaintext highlighter-rouge">config</code> file accordingly (or enter the command line to modify it accordingly).</p>
+
+<p><img src="/img/newrelic_pixie/pixie_05.png" alt="Hyper-V Screenshot" /></p>
+
+<h1 id="minikube">Minikube</h1>
+<p>Download Minikube from <a href="https://github.com/kubernetes/minikube/releases/latest/download/minikube-windows-amd64.exe">https://github.com/kubernetes/minikube/releases/latest/download/minikube-windows-amd64.exe</a> and rename the executable from <code class="language-plaintext highlighter-rouge">minikube-windows-amd64.exe</code> to <code class="language-plaintext highlighter-rouge">minikube.exe</code> then copy it to <code class="language-plaintext highlighter-rouge">C:\Windows\</code> to avoid adding Environment Variables.</p>
+
+<p>Minikube is a Linux virtual machine with a Kubernetes cluster pre-configured. To continue, you’ll need to have Oracle VirtualBox installed (Windows 7) or Hyper-V (Windows 8 Pro and above).  We’ll be running Minikube in Hyper-V to avoid installer another piece of software.</p>
+
+<p><img src="/img/newrelic_pixie/pixie_04.png" alt="Hyper-V Screenshot" /></p>
+
+<h1 id="helm">Helm</h1>
+<p>Helm is a command line tool that makes deployments to kubernetes clusters very simple.  Download Helm from <a href="https://get.helm.sh/helm-v3.7.1-windows-amd64.zip">https://get.helm.sh/helm-v3.7.1-windows-amd64.zip</a> and extract <code class="language-plaintext highlighter-rouge">helm.exe</code> to <code class="language-plaintext highlighter-rouge">C:/Windows/</code> to avoid messing with Envrionment Variables.</p>
+
+<p>Basically, Helm is used to read YAML (YAML Ain’t Markup Language) files that contains configurations for Kubernetes deployments, such as persistent volumes, pods, and more. Get started by making sure Helm works: <code class="language-plaintext highlighter-rouge">helm version</code>.</p>
+
+<h1 id="hyper-v">Hyper-V</h1>
+<p>Install <code class="language-plaintext highlighter-rouge">Hyper-V</code> by going to the Control Panel &gt; Programs and Features.  On the left pane, click on <code class="language-plaintext highlighter-rouge">Turn Windows features on or off</code>.  Select everything under <code class="language-plaintext highlighter-rouge">Hyper-V</code> and click OK.
+<img src="/img/newrelic_pixie/pixie_01.png" alt="Hyper-V Screenshot" /></p>
+
+<p>Once Hyper-V is installed, open the <code class="language-plaintext highlighter-rouge">Hyper-V Manager</code> (Start &gt; All Apps &gt; Windows Administrative Tools &gt; Hyper-V Manager) and click on <code class="language-plaintext highlighter-rouge">Virtual Switch Manager</code>.</p>
+
+<p>Create a new virtual network switch and set it to External network.  In this case, the name of our switch is called <code class="language-plaintext highlighter-rouge">New Virtual Switch</code>. Note: The default switch is internal and will have issues pulling images.</p>
+
+<p><img src="/img/newrelic_pixie/pixie_02.png" alt="Hyper-V Screenshot 2" /></p>
+
+<h2 id="configure-kubectl-with-minikube-via-hyper-v">Configure Kubectl with Minikube via Hyper-V</h2>
+<p>Since we want to work with Hyper-V, we’ll need to set the <code class="language-plaintext highlighter-rouge">driver</code> to <code class="language-plaintext highlighter-rouge">hyperv</code> and set the <code class="language-plaintext highlighter-rouge">hyperv-virtual-switch</code> to <code class="language-plaintext highlighter-rouge">New Virtual Switch</code> that we created in the previous step.  The following command will set your default <code class="language-plaintext highlighter-rouge">vm-driver</code> and <code class="language-plaintext highlighter-rouge">hyperv-virtual-switch</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>minikube config set driver hyperv &amp;&amp; minikube config set hyperv-virtual-switch "New Virtual Switch"
+</code></pre></div></div>
+
+<p>Next, clone the repository and follow the tutorial on https://developer.newrelic.com/collect-data/pixie/</p>
+
+<h3 id="mainsetupps1">main/setup.ps1</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "Please wait while we set up your lab environment.`n"
+
+echo "=== Checking your dependencies ==="
+
+$error.clear()
+try { minikube version &gt; $null }
+catch { "Error occured" }
+if (!$error) { "minikube ✓" } else { echo "Please install minikube" }
+
+$error.clear()
+try { kubectl version --client=true &gt; $null }
+catch { "not found" }
+if (!$error) { "kubectl ✓" } else { echo "Please install kubectl" }
+
+$hyperv = Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V-All -Online
+if ($hyperv.State -eq "Enabled") { "Hyper-V ✓" } else { echo "Please install Hyper-V or Start Hyper-V Manager Service" }
+
+if ((Get-VMSwitch | findstr -i external) -eq $null) { "Please create an External Hyper-V Switch" } else { echo "Hyper-V External Switch ✓" }
+
+$error.clear()
+try { helm version &gt; $null }
+catch { "Error occured" }
+if (!$error) { "helm ✓" } else { echo "Please install helm" }
+
+echo "`n=== Spinning up your cluster ==="
+
+# 8000 MB memory is not enough on Windows and 4 CPUs runs a bit slow
+minikube start --driver=hyperv --hyperv-virtual-switch='New Virtual Switch' --cni=flannel --cpus=6 --memory=10000 -p minikube-pixie-lab
+kubectl apply -f kube
+</code></pre></div></div>
+
+<p><img src="/img/newrelic_pixie/pixie_06.png" alt="Hyper-V Screenshot 6" /></p>
+
+<p>To make sure <code class="language-plaintext highlighter-rouge">kubectl</code> is configured to use the Minikube cluster, enter <code class="language-plaintext highlighter-rouge">kubectl cluster-info</code></p>
+
+<p>You can also enter <code class="language-plaintext highlighter-rouge">kubectl get nodes</code> to see your nodes.</p>
+
+<p>Note: Minikube clusters are preconfigured to have 1 node, while many production-ready environments recommend having 3 nodes.</p>
+
+<h3 id="scenario-1setupps1">scenario-1/setup.ps1</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "Please wait while we set up your lab environment.`n"
+
+kubectl apply -f kube
+
+$pod=kubectl get pods -o custom-columns=":metadata.name" | findstr mysql
+$query="mysql --database=main --password=password --execute=\""insert into images values (101, 'pixie', 'https://tinyhats.s3.amazonaws.com/pixie.png', 'pixie.png', 'PIXIE', 'true');"""
+kubectl exec -it $pod -- bash -c $query &gt; $null
+echo "Done!"
+</code></pre></div></div>
+
+<h3 id="scenario-2setupps1">scenario-2/setup.ps1</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "Please wait while we set up your lab environment.`n"
+
+$pod=kubectl get pods -o custom-columns=":metadata.name" | findstr mysql
+
+$query="mysql --database=main --password=password --execute=\""UPDATE images SET approve = 'false' WHERE id = 101;"""
+kubectl exec -it $pod -- bash -c $query &gt; $null
+kubectl apply -f kube
+
+echo "Done!"
+</code></pre></div></div>
+
+<h1 id="conclusion">Conclusion</h1>
+<p>Follow the rest of the lab tutorial here: <a href="https://developer.newrelic.com/collect-data/pixie/">https://developer.newrelic.com/collect-data/pixie/</a></p>
+:ET

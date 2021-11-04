@@ -1,0 +1,2 @@
+I"�<p>When you have multiple containers with microservices interacting with each other, you’ll need a way to manage these containers.  Common tools for container orchestration are Docker Swarm and Kubernetes.  We’ll be dealing with Kubernetes since public cloud providers recently introduced Kubernetes cluster management systems.  For example, Amazon has Elastic Kubernetes Services (EKS), Microsoft has Azure Kubernetes (AKS), and Google Cloud Platform has Google Kubernetes Engine (GKE).</p>
+:ET
