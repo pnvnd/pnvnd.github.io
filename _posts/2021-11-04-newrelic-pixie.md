@@ -102,6 +102,33 @@ You can also enter `kubectl get nodes` to see your nodes.
 
 Note: Minikube clusters are preconfigured to have 1 node, while many production-ready environments recommend having 3 nodes.
 
+# New Relic Pixie Tutorial
+
+After your minikube cluster is up and running, you'll be directed to install Pixie by going through the guided install.  However, the script that is generated was meant for bash terminals.  To correct this script for PowerShell, replace `&&` with `;` to execute another statement, and replace `\` with `` ` `` (backtick) to continue statements on the next line.  A sample of what this would look like for PowerShell:
+
+```
+kubectl apply -f https://download.newrelic.com/install/kubernetes/pixie/latest/px.dev_viziers.yaml; 
+kubectl apply -f https://download.newrelic.com/install/kubernetes/pixie/latest/olm_crd.yaml; 
+helm repo add newrelic https://helm-charts.newrelic.com;
+helm repo update; 
+kubectl create namespace newrelic;
+
+helm upgrade --install newrelic-bundle newrelic/nri-bundle `
+ --set global.licenseKey=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8NRAL `
+ --set global.cluster=tiny-hat `
+ --namespace=newrelic `
+ --set newrelic-infrastructure.privileged=true `
+ --set global.lowDataMode=true `
+ --set ksm.enabled=true `
+ --set prometheus.enabled=true `
+ --set kubeEvents.enabled=true `
+ --set logging.enabled=true `
+ --set newrelic-pixie.enabled=true `
+ --set newrelic-pixie.apiKey=px-api-a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o0p5 `
+ --set pixie-chart.enabled=true `
+ --set pixie-chart.deployKey=px-dep-d4c3b2a1-f6e5-h8g7-j0i9-p5o0n4m3l2k1 `
+ --set pixie-chart.clusterName=tiny-hat
+```
 
 ### scenario-1/setup.ps1
 ```
