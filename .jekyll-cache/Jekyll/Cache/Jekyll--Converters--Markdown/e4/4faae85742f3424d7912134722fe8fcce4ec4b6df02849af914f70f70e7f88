@@ -1,0 +1,258 @@
+I"�\<h1 id="introduction">Introduction</h1>
+<p>We’ll be using the OpenTelemetry Collector <code class="language-plaintext highlighter-rouge">otelcol-contrib</code> to gather host metrics on Windows, Linux, and Mac.  At the time of this writing, we’ll be using the latest <code class="language-plaintext highlighter-rouge">otelcol-contrib</code> package version 0.57.2.</p>
+
+<h2 id="windows">Windows</h2>
+
+<p>The following steps assumes you are running Windows PowerShell as an Administrator.</p>
+
+<ol>
+  <li>Create a directory somewhere to keep the installation in one place.
+    <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w"> </span><span class="n">mkdir</span><span class="w"> </span><span class="s2">"C:\Program Files\OpenTelemetry"</span><span class="w">
+</span></code></pre></div>    </div>
+    <p><img src="/img/otel-infra/otel-infra_windows_01.png" alt="Screenshot" /></p>
+  </li>
+  <li>Change to the newly created directory.
+    <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w"> </span><span class="n">cd</span><span class="w"> </span><span class="s2">"C:\Program Files\OpenTelemetry"</span><span class="w">
+</span></code></pre></div>    </div>
+    <p><img src="/img/otel-infra/otel-infra_windows_02.png" alt="Screenshot" /></p>
+  </li>
+  <li>Download the <code class="language-plaintext highlighter-rouge">otelcol-contrib</code> package from GitHub.
+    <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w"> </span><span class="p">(</span><span class="n">New-Object</span><span class="w"> </span><span class="nx">Net.WebClient</span><span class="p">)</span><span class="o">.</span><span class="nf">DownloadFile</span><span class="p">(</span><span class="s2">"https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v0.57.2/otelcol-contrib_0.57.2_windows_amd64.tar.gz"</span><span class="p">,</span><span class="w"> </span><span class="s2">"C:\Program Files\OpenTelemetry\otelcol-contrib_0.57.2_windows_amd64.tar.gz"</span><span class="p">)</span><span class="w">
+</span></code></pre></div>    </div>
+    <p><img src="/img/otel-infra/otel-infra_windows_03.png" alt="Screenshot" /></p>
+  </li>
+  <li>Extract the files to the current directory, either using the command line or 7zip should work.
+    <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w"> </span><span class="n">tar</span><span class="w"> </span><span class="nt">-xf</span><span class="w"> </span><span class="nx">otelcol-contrib_0.57.2_windows_amd64.tar.gz</span><span class="w">
+</span></code></pre></div>    </div>
+    <p><img src="/img/otel-infra/otel-infra_windows_04.png" alt="Screenshot" /></p>
+  </li>
+  <li>Download a sample configuration file for the OpenTelemetry Contrib collector from GitHub
+    <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w"> </span><span class="p">(</span><span class="n">New-Object</span><span class="w"> </span><span class="nx">Net.WebClient</span><span class="p">)</span><span class="o">.</span><span class="nf">DownloadFile</span><span class="p">(</span><span class="s2">"https://gist.githubusercontent.com/pnvnd/1533b04609fbbe583056afdc31683667/raw/242f9fa682989639a06fc22eb209b8ffd1a4d4c3/otel-config_windows.yaml"</span><span class="p">,</span><span class="w"> </span><span class="s2">"C:\Program Files\OpenTelemetry\otel-config_windows.yaml"</span><span class="p">)</span><span class="w">
+</span></code></pre></div>    </div>
+    <p>Otherwise, you can create <code class="language-plaintext highlighter-rouge">otel-config_windows.yaml</code> manually with the following:</p>
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="na">extensions</span><span class="pi">:</span>
+   <span class="na">health_check</span><span class="pi">:</span>
+
+ <span class="na">receivers</span><span class="pi">:</span>
+   <span class="na">hostmetrics</span><span class="pi">:</span>
+     <span class="na">collection_interval</span><span class="pi">:</span> <span class="s">20s</span>
+     <span class="na">scrapers</span><span class="pi">:</span>
+       <span class="na">cpu</span><span class="pi">:</span>
+         <span class="na">metrics</span><span class="pi">:</span>
+           <span class="na">system.cpu.utilization</span><span class="pi">:</span>
+             <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+       <span class="na">load</span><span class="pi">:</span>
+       <span class="na">memory</span><span class="pi">:</span>
+         <span class="na">metrics</span><span class="pi">:</span>
+           <span class="na">system.memory.utilization</span><span class="pi">:</span>
+             <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+       <span class="na">disk</span><span class="pi">:</span>
+       <span class="na">filesystem</span><span class="pi">:</span>
+         <span class="na">metrics</span><span class="pi">:</span>
+           <span class="na">system.filesystem.utilization</span><span class="pi">:</span>
+             <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+       <span class="na">network</span><span class="pi">:</span>
+       <span class="na">paging</span><span class="pi">:</span>
+         <span class="na">metrics</span><span class="pi">:</span>
+           <span class="na">system.paging.utilization</span><span class="pi">:</span>
+             <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+ <span class="c1">#     processes:</span>
+       <span class="na">process</span><span class="pi">:</span>
+         <span class="na">mute_process_name_error</span><span class="pi">:</span> <span class="no">true</span>
+
+ <span class="na">processors</span><span class="pi">:</span>
+   <span class="na">memory_limiter</span><span class="pi">:</span>
+     <span class="na">check_interval</span><span class="pi">:</span> <span class="s">1s</span>
+     <span class="na">limit_mib</span><span class="pi">:</span> <span class="m">1000</span>
+     <span class="na">spike_limit_mib</span><span class="pi">:</span> <span class="m">200</span>
+   <span class="na">batch</span><span class="pi">:</span>
+   <span class="na">cumulativetodelta</span><span class="pi">:</span>
+     <span class="na">include</span><span class="pi">:</span>
+       <span class="na">metrics</span><span class="pi">:</span>
+         <span class="pi">-</span> <span class="s">system.network.io</span>
+         <span class="pi">-</span> <span class="s">system.disk.operations</span>
+         <span class="pi">-</span> <span class="s">system.network.dropped</span>
+         <span class="pi">-</span> <span class="s">system.network.packets</span>
+         <span class="pi">-</span> <span class="s">process.cpu.time</span>
+       <span class="na">match_type</span><span class="pi">:</span> <span class="s">strict</span>
+   <span class="na">resource</span><span class="pi">:</span>
+     <span class="na">attributes</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">key</span><span class="pi">:</span> <span class="s">host.id</span>
+         <span class="na">from_attribute</span><span class="pi">:</span> <span class="s">host.name</span>
+         <span class="na">action</span><span class="pi">:</span> <span class="s">upsert</span>
+   <span class="na">resourcedetection</span><span class="pi">:</span>
+     <span class="na">detectors</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">env</span><span class="pi">,</span> <span class="nv">system</span><span class="pi">]</span>
+
+ <span class="na">exporters</span><span class="pi">:</span>
+   <span class="na">otlp</span><span class="pi">:</span>
+     <span class="na">endpoint</span><span class="pi">:</span> <span class="s">https://otlp.nr-data.net:4317</span>
+     <span class="na">headers</span><span class="pi">:</span>
+       <span class="na">api-key</span><span class="pi">:</span> <span class="s">YOUR_KEY_HERE</span>
+
+ <span class="na">service</span><span class="pi">:</span>
+   <span class="na">pipelines</span><span class="pi">:</span>
+     <span class="na">metrics</span><span class="pi">:</span>
+       <span class="na">receivers</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">hostmetrics</span><span class="pi">]</span>
+       <span class="na">processors</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">batch</span><span class="pi">,</span> <span class="nv">resourcedetection</span><span class="pi">,</span> <span class="nv">resource</span><span class="pi">,</span> <span class="nv">cumulativetodelta</span><span class="pi">]</span>
+       <span class="na">exporters</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">otlp</span><span class="pi">]</span>
+</code></pre></div>    </div>
+    <p>Note: The <code class="language-plaintext highlighter-rouge">processes</code> is commented out for the Windows configuration, since this is only supported in Linux.</p>
+  </li>
+  <li>Edit the <code class="language-plaintext highlighter-rouge">otel-config_windows.yaml</code> file and replace <code class="language-plaintext highlighter-rouge">YOUR_KEY_HERE</code> with your New Relic Ingest - License key ending with NRAL
+    <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">((</span><span class="n">Get-Content</span><span class="w"> </span><span class="nt">-path</span><span class="w"> </span><span class="s2">"C:\Program Files\OpenTelemetry\otel-config_windows.yaml"</span><span class="w"> </span><span class="nt">-Raw</span><span class="p">)</span><span class="w"> </span><span class="o">-replace</span><span class="w"> </span><span class="s1">'YOUR_KEY_HERE'</span><span class="p">,</span><span class="s1">'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXNRAL'</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Set-Content</span><span class="w"> </span><span class="nt">-Path</span><span class="w"> </span><span class="s2">"C:\Program Files\OpenTelemetry\otel-config_windows.yaml"</span><span class="w">
+</span></code></pre></div>    </div>
+    <p><img src="/img/otel-infra/otel-infra_windows_05.png" alt="Screenshot" /></p>
+  </li>
+  <li>Create a Windows service to run the OpenTelemetry Collector in the background
+    <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">New-Service</span><span class="w"> </span><span class="nt">-Name</span><span class="w"> </span><span class="s2">"otel-infra"</span><span class="w"> </span><span class="nt">-BinaryPathName</span><span class="w"> </span><span class="s1">'C:\Program Files\OpenTelemetry\otelcol-contrib.exe --config=file:"C:\Program Files\OpenTelemetry\otel-config_windows.yaml"'</span><span class="w"> </span><span class="nt">-DisplayName</span><span class="w"> </span><span class="s2">"OpenTelemetry Infrastructure Agent"</span><span class="w"> </span><span class="nt">-StartupType</span><span class="w"> </span><span class="nx">Manual</span><span class="w"> </span><span class="nt">-Description</span><span class="w"> </span><span class="s2">"OpenTelemetry Infrastructure Agent v0.57.2"</span><span class="w"> </span><span class="nt">-Credential</span><span class="w"> </span><span class="s2">"DESKTOP-IED569R\Peter"</span><span class="w">
+</span></code></pre></div>    </div>
+    <p><img src="/img/otel-infra/otel-infra_windows_07.png" alt="Screenshot" /></p>
+
+    <p>Note: Running this service as a <code class="language-plaintext highlighter-rouge">Local System</code> account does not have access to gather storage metrics, so you’ll need to create a service account or use your current account  credentials to get these metrics.<br />
+<img src="/img/otel-infra/otel-infra_windows_06.png" alt="Screenshot" /></p>
+  </li>
+  <li>Start the <code class="language-plaintext highlighter-rouge">otel-infra</code> service by running <code class="language-plaintext highlighter-rouge">services.msc</code> or use the command line
+    <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">net</span><span class="w"> </span><span class="nx">start</span><span class="w"> </span><span class="s2">"otel-infra"</span><span class="w">
+</span></code></pre></div>    </div>
+    <p><img src="/img/otel-infra/otel-infra_windows_08.png" alt="Screenshot" />
+<img src="/img/otel-infra/otel-infra_windows_09.png" alt="Screenshot" /></p>
+  </li>
+  <li>Log into New Relic and check your Hosts to see metrics.
+<img src="/img/otel-infra/otel-infra_windows_10.png" alt="Screenshot" /></li>
+  <li>Stop the <code class="language-plaintext highlighter-rouge">otel-infra</code> service with
+    <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">net</span><span class="w"> </span><span class="nx">stop</span><span class="w"> </span><span class="s2">"otel-infra"</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>If you need to uninstall the service and remove the files, use this command
+    <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"sc delete otel-infra"</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">cmd</span><span class="w">
+</span><span class="nx">cd</span><span class="w"> </span><span class="nx">~</span><span class="w">
+</span><span class="n">rm</span><span class="w"> </span><span class="nt">-r</span><span class="w"> </span><span class="s2">"C:\Program Files\OpenTelemetry"</span><span class="w">
+</span></code></pre></div>    </div>
+    <p><img src="/img/otel-infra/otel-infra_windows_11.png" alt="Screenshot" /></p>
+  </li>
+</ol>
+
+<h2 id="linux">Linux</h2>
+<p>Similar to the Windows setup, commands will be listed here to do the same thing.</p>
+
+<ol>
+  <li>Make a directory somewhere to save the files and configurations
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo mkdir</span> /opt/opentelemetry
+</code></pre></div>    </div>
+  </li>
+  <li>Change to the newly created directory
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">cd</span> /opt/opentelemetry
+</code></pre></div>    </div>
+  </li>
+  <li>Download the <code class="language-plaintext highlighter-rouge">otelcol-contrib</code> package for Linux.  In this example, we’re running this on a Raspberry Pi 4B (8GB) with Raspbian (64-Bit), so we’re going to get the <code class="language-plaintext highlighter-rouge">arm64</code> version.
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo </span>wget https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v0.57.2/otelcol-contrib_0.57.2_linux_arm64.tar.gz
+</code></pre></div>    </div>
+  </li>
+  <li>Download a sample configuration file for Linux
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo </span>wget https://gist.githubusercontent.com/pnvnd/1533b04609fbbe583056afdc31683667/raw/93c55d4065bc783d3f340931cca91fceacccaae8/otel-config_linux.yaml
+</code></pre></div>    </div>
+    <p>Otherwise, create <code class="language-plaintext highlighter-rouge">otel-config_linux.yaml</code> manually with the following</p>
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="na">extensions</span><span class="pi">:</span>
+   <span class="na">health_check</span><span class="pi">:</span>
+
+ <span class="na">receivers</span><span class="pi">:</span>
+   <span class="na">hostmetrics</span><span class="pi">:</span>
+     <span class="na">collection_interval</span><span class="pi">:</span> <span class="s">20s</span>
+     <span class="na">scrapers</span><span class="pi">:</span>
+       <span class="na">cpu</span><span class="pi">:</span>
+         <span class="na">metrics</span><span class="pi">:</span>
+           <span class="na">system.cpu.utilization</span><span class="pi">:</span>
+             <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+       <span class="na">load</span><span class="pi">:</span>
+       <span class="na">memory</span><span class="pi">:</span>
+         <span class="na">metrics</span><span class="pi">:</span>
+           <span class="na">system.memory.utilization</span><span class="pi">:</span>
+             <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+       <span class="na">disk</span><span class="pi">:</span>
+       <span class="na">filesystem</span><span class="pi">:</span>
+         <span class="na">metrics</span><span class="pi">:</span>
+           <span class="na">system.filesystem.utilization</span><span class="pi">:</span>
+             <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+       <span class="na">network</span><span class="pi">:</span>
+       <span class="na">paging</span><span class="pi">:</span>
+         <span class="na">metrics</span><span class="pi">:</span>
+           <span class="na">system.paging.utilization</span><span class="pi">:</span>
+             <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+       <span class="na">processes</span><span class="pi">:</span>
+       <span class="na">process</span><span class="pi">:</span>
+         <span class="na">mute_process_name_error</span><span class="pi">:</span> <span class="no">true</span>
+
+ <span class="na">processors</span><span class="pi">:</span>
+   <span class="na">memory_limiter</span><span class="pi">:</span>
+     <span class="na">check_interval</span><span class="pi">:</span> <span class="s">1s</span>
+     <span class="na">limit_mib</span><span class="pi">:</span> <span class="m">1000</span>
+     <span class="na">spike_limit_mib</span><span class="pi">:</span> <span class="m">200</span>
+   <span class="na">batch</span><span class="pi">:</span>
+   <span class="na">cumulativetodelta</span><span class="pi">:</span>
+     <span class="na">include</span><span class="pi">:</span>
+       <span class="na">metrics</span><span class="pi">:</span>
+         <span class="pi">-</span> <span class="s">system.network.io</span>
+         <span class="pi">-</span> <span class="s">system.disk.operations</span>
+         <span class="pi">-</span> <span class="s">system.network.dropped</span>
+         <span class="pi">-</span> <span class="s">system.network.packets</span>
+         <span class="pi">-</span> <span class="s">process.cpu.time</span>
+       <span class="na">match_type</span><span class="pi">:</span> <span class="s">strict</span>
+   <span class="na">resource</span><span class="pi">:</span>
+     <span class="na">attributes</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">key</span><span class="pi">:</span> <span class="s">host.id</span>
+         <span class="na">from_attribute</span><span class="pi">:</span> <span class="s">host.name</span>
+         <span class="na">action</span><span class="pi">:</span> <span class="s">upsert</span>
+   <span class="na">resourcedetection</span><span class="pi">:</span>
+     <span class="na">detectors</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">env</span><span class="pi">,</span> <span class="nv">system</span><span class="pi">]</span>
+
+ <span class="na">exporters</span><span class="pi">:</span>
+   <span class="na">otlp</span><span class="pi">:</span>
+     <span class="na">endpoint</span><span class="pi">:</span> <span class="s">https://otlp.nr-data.net:4317</span>
+     <span class="na">headers</span><span class="pi">:</span>
+       <span class="na">api-key</span><span class="pi">:</span> <span class="s">YOUR_KEY_HERE</span>
+
+ <span class="na">service</span><span class="pi">:</span>
+   <span class="na">pipelines</span><span class="pi">:</span>
+     <span class="na">metrics</span><span class="pi">:</span>
+       <span class="na">receivers</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">hostmetrics</span><span class="pi">]</span>
+       <span class="na">processors</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">batch</span><span class="pi">,</span> <span class="nv">resourcedetection</span><span class="pi">,</span> <span class="nv">resource</span><span class="pi">,</span> <span class="nv">cumulativetodelta</span><span class="pi">]</span>
+       <span class="na">exporters</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">otlp</span><span class="pi">]</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Extract the files
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo tar</span> <span class="nt">-xf</span> otelcol-contrib_0.57.2_linux_arm64.tar.gz
+</code></pre></div>    </div>
+  </li>
+  <li>Check the version of your <code class="language-plaintext highlighter-rouge">otelcol-contrib</code> package
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo</span> ./otelcol-contrib <span class="nt">--version</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Edit <code class="language-plaintext highlighter-rouge">otel-config_linux.yaml</code> and update with your New Relic Ingest - License key
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo </span>nano otel-config_linux.yaml
+</code></pre></div>    </div>
+    <p>Otherwise run this command</p>
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo sed</span> <span class="nt">-i</span> <span class="s1">'s/YOUR_KEY_HERE/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXNRAL/'</span> otel-config_linux.yaml
+</code></pre></div>    </div>
+  </li>
+  <li>Start your OpenTelemetry Collector in background
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo nohup</span> ./otelcol-contrib <span class="nt">--config</span><span class="o">=</span>file:<span class="s2">"/home/pi/otel/otel-config_linux.yaml"</span> &amp;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Log into New Relic and check your hosts for metrics
+<img src="/img/otel-infra/otel-infra_linux_01.png" alt="Screenshot" /></p>
+  </li>
+  <li>To check if you are running the <code class="language-plaintext highlighter-rouge">otelcol-contrib</code>  run
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> suo ps aux | <span class="nb">grep </span>otelcol-contrib
+</code></pre></div>    </div>
+  </li>
+  <li>Stop the <code class="language-plaintext highlighter-rouge">otelcol-contrib</code> service from running using this command
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo </span>pkill otelcol-contrib
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="mac">Mac</h2>
+<p>TBD</p>
+
+:ET

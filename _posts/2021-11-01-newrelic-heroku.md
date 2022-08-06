@@ -34,11 +34,11 @@ We'll go over how to setup the following in New Relic One:
 1. In your Heroku dashboard, click on the the app with the New Relic APM add-on
 1. Click on Settings > Config Vars > `Reveal Config Vars`
 1. You should see at least three (3) configuration variables.  If not, add them manually:
- - `NEW_RELIIC_APP_NAME`
+ - `NEW_RELIC_APP_NAME`
  - `NEW_RELIC_LICENSE_KEY`
  - `NEW_RELIC_LOG`
 ![Heroku Screenshot 2](/img/newrelic_heroku/nr1_heroku_02.png)
-1. Edit the `NEW_RELIIC_APP_NAME` to give your application a name. This is what shows up in New Relic.  
+1. Edit the `NEW_RELIC_APP_NAME` to give your application a name. This is what shows up in New Relic.  
 You also can edit this in New Relic One > APM > Settings > Application > Application Settings > Application alias
 1. Edit `NEW_RELIC_LICENSE_KEY` to have the license key for the New Relic account you want data ingested into
 1. Restart your application by toggling off/on your dynos in Heroku > Resources
