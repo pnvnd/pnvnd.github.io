@@ -1,4 +1,4 @@
-I"®\<h1 id="introduction">Introduction</h1>
+I"Ï~<h1 id="introduction">Introduction</h1>
 <p>Weâ€™ll be using the OpenTelemetry Collector <code class="language-plaintext highlighter-rouge">otelcol-contrib</code> to gather host metrics on Windows, Linux, and Mac.  At the time of this writing, weâ€™ll be using the latest <code class="language-plaintext highlighter-rouge">otelcol-contrib</code> package version 0.57.2.</p>
 
 <h2 id="windows">Windows</h2>
@@ -117,8 +117,10 @@
     <p><img src="/img/otel-infra/otel-infra_windows_08.png" alt="Screenshot" />
 <img src="/img/otel-infra/otel-infra_windows_09.png" alt="Screenshot" /></p>
   </li>
-  <li>Log into New Relic and check your Hosts to see metrics.
-<img src="/img/otel-infra/otel-infra_windows_10.png" alt="Screenshot" /></li>
+  <li>
+    <p>Log into New Relic and check your Hosts to see metrics.
+<img src="/img/otel-infra/otel-infra_windows_10.png" alt="Screenshot" /></p>
+  </li>
   <li>Stop the <code class="language-plaintext highlighter-rouge">otel-infra</code> service with
     <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">net</span><span class="w"> </span><span class="nx">stop</span><span class="w"> </span><span class="s2">"otel-infra"</span><span class="w">
 </span></code></pre></div>    </div>
@@ -133,7 +135,8 @@
 </ol>
 
 <h2 id="linux">Linux</h2>
-<p>Similar to the Windows setup, commands will be listed here to do the same thing.</p>
+<p>Similar to the Windows setup, commands will be listed here to do the same thing, but with a Raspberry Pi 4B device.
+<img src="/img/otel-infra/otel-infra_linux_00.png" alt="Screenshot" /></p>
 
 <ol>
   <li>Make a directory somewhere to save the files and configurations
@@ -253,6 +256,112 @@
 </ol>
 
 <h2 id="mac">Mac</h2>
-<p>TBD</p>
+<p>More support is being added to Mac devices, so at the time of this writing, cpu and some disk/storage metrics are not captured by the <code class="language-plaintext highlighter-rouge">otelcol-contrib</code> package.</p>
 
+<ol>
+  <li>
+    <p>Download the darwin <code class="language-plaintext highlighter-rouge">otelcol-contrib</code> package for your MacOS - amd64 for Intel Macs or arm64 newer Macs.  IN this example, Iâ€™ll be using <code class="language-plaintext highlighter-rouge">https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v0.57.2/otelcol-contrib_0.57.2_darwin_amd64.tar.gz</code></p>
+  </li>
+  <li>
+    <p>Once downloaded, double-click on the <code class="language-plaintext highlighter-rouge">tar.gz</code> package to extract the files.
+<img src="/img/otel-infra/otel-infra_mac_02.png" alt="Screenshot" /></p>
+  </li>
+  <li>
+    <p>Create a folder somewhere, <code class="language-plaintext highlighter-rouge">/Users/yourname/Desktop/otel-infra</code> should be fine.
+<img src="/img/otel-infra/otel-infra_mac_01.png" alt="Screenshot" /></p>
+  </li>
+  <li>
+    <p>Copy or move the <code class="language-plaintext highlighter-rouge">otelcol-contrib</code> package to the <code class="language-plaintext highlighter-rouge">otel-infra</code> folder.  Then, right-click &gt; Open.
+<img src="/img/otel-infra/otel-infra_mac_03.png" alt="Screenshot" /></p>
+  </li>
+  <li>
+    <p>Click <code class="language-plaintext highlighter-rouge">Open</code>.  While nothing should happen, we do this to allow your Mac permissions to run the OpenTelemetry Collector in a terminal.
+<img src="/img/otel-infra/otel-infra_mac_04.png" alt="Screenshot" /></p>
+  </li>
+  <li>Download a configuration file for <code class="language-plaintext highlighter-rouge">otelcol-contrib</code> here:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://gist.githubusercontent.com/pnvnd/1533b04609fbbe583056afdc31683667/raw/d34ca012a2035b5d6636fa6867247f5418cc3322/otel-config_mac.yaml
+</code></pre></div>    </div>
+    <p>Otherwise, create the file manually with the following:</p>
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="na">extensions</span><span class="pi">:</span>
+   <span class="na">health_check</span><span class="pi">:</span>
+
+ <span class="na">receivers</span><span class="pi">:</span>
+   <span class="na">hostmetrics</span><span class="pi">:</span>
+     <span class="na">collection_interval</span><span class="pi">:</span> <span class="s">20s</span>
+     <span class="na">scrapers</span><span class="pi">:</span>
+ <span class="c1">#     cpu:</span>
+ <span class="c1">#       metrics:</span>
+ <span class="c1">#         system.cpu.utilization:</span>
+ <span class="c1">#           enabled: true</span>
+       <span class="na">load</span><span class="pi">:</span>
+       <span class="na">memory</span><span class="pi">:</span>
+         <span class="na">metrics</span><span class="pi">:</span>
+           <span class="na">system.memory.utilization</span><span class="pi">:</span>
+             <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+ <span class="c1">#     disk:</span>
+       <span class="na">filesystem</span><span class="pi">:</span>
+         <span class="na">metrics</span><span class="pi">:</span>
+           <span class="na">system.filesystem.utilization</span><span class="pi">:</span>
+             <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+       <span class="na">network</span><span class="pi">:</span>
+       <span class="na">paging</span><span class="pi">:</span>
+         <span class="na">metrics</span><span class="pi">:</span>
+           <span class="na">system.paging.utilization</span><span class="pi">:</span>
+             <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+       <span class="na">processes</span><span class="pi">:</span>
+ <span class="c1">#     process:</span>
+
+ <span class="na">processors</span><span class="pi">:</span>
+   <span class="na">memory_limiter</span><span class="pi">:</span>
+     <span class="na">check_interval</span><span class="pi">:</span> <span class="s">1s</span>
+     <span class="na">limit_mib</span><span class="pi">:</span> <span class="m">1000</span>
+     <span class="na">spike_limit_mib</span><span class="pi">:</span> <span class="m">200</span>
+   <span class="na">batch</span><span class="pi">:</span>
+   <span class="na">cumulativetodelta</span><span class="pi">:</span>
+     <span class="na">include</span><span class="pi">:</span>
+       <span class="na">metrics</span><span class="pi">:</span>
+         <span class="pi">-</span> <span class="s">system.network.io</span>
+         <span class="pi">-</span> <span class="s">system.disk.operations</span>
+         <span class="pi">-</span> <span class="s">system.network.dropped</span>
+         <span class="pi">-</span> <span class="s">system.network.packets</span>
+         <span class="pi">-</span> <span class="s">process.cpu.time</span>
+       <span class="na">match_type</span><span class="pi">:</span> <span class="s">strict</span>
+   <span class="na">resource</span><span class="pi">:</span>
+     <span class="na">attributes</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">key</span><span class="pi">:</span> <span class="s">host.id</span>
+         <span class="na">from_attribute</span><span class="pi">:</span> <span class="s">host.name</span>
+         <span class="na">action</span><span class="pi">:</span> <span class="s">upsert</span>
+   <span class="na">resourcedetection</span><span class="pi">:</span>
+     <span class="na">detectors</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">env</span><span class="pi">,</span> <span class="nv">system</span><span class="pi">]</span>
+
+ <span class="na">exporters</span><span class="pi">:</span>
+   <span class="na">otlp</span><span class="pi">:</span>
+     <span class="na">endpoint</span><span class="pi">:</span> <span class="s">https://otlp.nr-data.net:4317</span>
+     <span class="na">headers</span><span class="pi">:</span>
+       <span class="na">api-key</span><span class="pi">:</span> <span class="s">YOUR_KEY_HERE</span>
+
+ <span class="na">service</span><span class="pi">:</span>
+   <span class="na">pipelines</span><span class="pi">:</span>
+     <span class="na">metrics</span><span class="pi">:</span>
+       <span class="na">receivers</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">hostmetrics</span><span class="pi">]</span>
+       <span class="na">processors</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">batch</span><span class="pi">,</span> <span class="nv">resourcedetection</span><span class="pi">,</span> <span class="nv">resource</span><span class="pi">,</span> <span class="nv">cumulativetodelta</span><span class="pi">]</span>
+       <span class="na">exporters</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">otlp</span><span class="pi">]</span>
+</code></pre></div>    </div>
+    <p>Notice that cpu and disk have been commented out, as they have not been implemented in this version.  However, if you try anyway, you may get a few storage metrics.
+ <img src="/img/otel-infra/otel-infra_mac_06.png" alt="Screenshot" /></p>
+  </li>
+  <li>
+    <p>Edit <code class="language-plaintext highlighter-rouge">otel-config_mac.yaml</code> and replace <code class="language-plaintext highlighter-rouge">YOUR_KEY_HERE</code> with your Ingest - License key from New Relic.</p>
+  </li>
+  <li>Run this command to start the OpenTelemetry Collector:
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./otelcol-contrib <span class="nt">--config</span><span class="o">=</span>file:./otel-config_mac.yaml
+</code></pre></div>    </div>
+    <p><img src="/img/otel-infra/otel-infra_mac_07.png" alt="Screenshot" /></p>
+  </li>
+  <li>Log into New Relic and check the results.
+<img src="/img/otel-infra/otel-infra_mac_09.png" alt="Screenshot" /></li>
+</ol>
+
+<h1 id="remarks">Remarks</h1>
+<p>Overall, collecting host metrics with the OpenTelemtry Collector Contrib package is still beta, and breaking changes can happen in future releases.  However, the progress so far is quite impressive.  Feel free to check out the <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/hostmetricsreceiver">Host Metrics Reciever Readme</a> for updates.</p>
 :ET

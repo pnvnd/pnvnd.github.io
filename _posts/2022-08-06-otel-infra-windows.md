@@ -134,6 +134,7 @@ The following steps assumes you are running Windows PowerShell as an Administrat
 
 1. Log into New Relic and check your Hosts to see metrics.
    ![Screenshot](/img/otel-infra/otel-infra_windows_10.png)
+   
 1. Stop the `otel-infra` service with
    ```powershell
    net stop "otel-infra"
@@ -273,5 +274,106 @@ Similar to the Windows setup, commands will be listed here to do the same thing,
     ```
 
 ## Mac
-TBD
+More support is being added to Mac devices, so at the time of this writing, cpu and some disk/storage metrics are not captured by the `otelcol-contrib` package.
 
+1. Download the darwin `otelcol-contrib` package for your MacOS - amd64 for Intel Macs or arm64 newer Macs.  IN this example, I'll be using `https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v0.57.2/otelcol-contrib_0.57.2_darwin_amd64.tar.gz`
+
+1. Once downloaded, double-click on the `tar.gz` package to extract the files.
+![Screenshot](/img/otel-infra/otel-infra_mac_02.png)
+
+1. Create a folder somewhere, `/Users/yourname/Desktop/otel-infra` should be fine.
+![Screenshot](/img/otel-infra/otel-infra_mac_01.png)
+
+1. Copy or move the `otelcol-contrib` package to the `otel-infra` folder.  Then, right-click > Open.
+![Screenshot](/img/otel-infra/otel-infra_mac_03.png)
+
+1. Click `Open`.  While nothing should happen, we do this to allow your Mac permissions to run the OpenTelemetry Collector in a terminal.
+![Screenshot](/img/otel-infra/otel-infra_mac_04.png)
+
+1. Download a configuration file for `otelcol-contrib` here:
+   ```
+   https://gist.githubusercontent.com/pnvnd/1533b04609fbbe583056afdc31683667/raw/d34ca012a2035b5d6636fa6867247f5418cc3322/otel-config_mac.yaml
+   ```
+   Otherwise, create the file manually with the following:
+    ```yaml
+    extensions:
+      health_check:
+
+    receivers:
+      hostmetrics:
+        collection_interval: 20s
+        scrapers:
+    #     cpu:
+    #       metrics:
+    #         system.cpu.utilization:
+    #           enabled: true
+          load:
+          memory:
+            metrics:
+              system.memory.utilization:
+                enabled: true
+    #     disk:
+          filesystem:
+            metrics:
+              system.filesystem.utilization:
+                enabled: false
+          network:
+          paging:
+            metrics:
+              system.paging.utilization:
+                enabled: true
+          processes:
+    #     process:
+
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 1000
+        spike_limit_mib: 200
+      batch:
+      cumulativetodelta:
+        include:
+          metrics:
+            - system.network.io
+            - system.disk.operations
+            - system.network.dropped
+            - system.network.packets
+            - process.cpu.time
+          match_type: strict
+      resource:
+        attributes:
+          - key: host.id
+            from_attribute: host.name
+            action: upsert
+      resourcedetection:
+        detectors: [env, system]
+
+    exporters:
+      otlp:
+        endpoint: https://otlp.nr-data.net:4317
+        headers:
+          api-key: YOUR_KEY_HERE
+
+    service:
+      pipelines:
+        metrics:
+          receivers: [hostmetrics]
+          processors: [batch, resourcedetection, resource, cumulativetodelta]
+          exporters: [otlp]
+    ```
+    Notice that cpu and disk have been commented out, as they have not been implemented in this version.  However, if you try anyway, you may get a few storage metrics.
+    ![Screenshot](/img/otel-infra/otel-infra_mac_06.png)
+
+1. Edit `otel-config_mac.yaml` and replace `YOUR_KEY_HERE` with your Ingest - License key from New Relic.
+
+1. Run this command to start the OpenTelemetry Collector:
+   ```sh
+   ./otelcol-contrib --config=file:./otel-config_mac.yaml
+   ```
+   ![Screenshot](/img/otel-infra/otel-infra_mac_07.png)
+
+1. Log into New Relic and check the results.
+![Screenshot](/img/otel-infra/otel-infra_mac_09.png)
+
+# Remarks
+Overall, collecting host metrics with the OpenTelemtry Collector Contrib package is still beta, and breaking changes can happen in future releases.  However, the progress so far is quite impressive.  Feel free to check out the [Host Metrics Reciever Readme](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/hostmetricsreceiver) for updates.
