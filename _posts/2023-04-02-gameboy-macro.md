@@ -6,7 +6,7 @@ background: '/img/gameboy-macro/gbmacro_05.jpg'
 ---
 
 # Introduction
-There's are some videos that show the "Gameboy Micro" working without soldering.  However, these videos do not show you clear screenshots of what it should look like or the positioning, just the end result with tape on top.  Here are the example videos:
+There are some videos that show the "Gameboy Micro" working without soldering.  However, these videos do not show you clear screenshots of what it should look like or the positioning, just the end result with tape on top.  Here are the example videos:
 1. [https://www.youtube.com/watch?v=GbOzY7UIec4](https://www.youtube.com/watch?v=GbOzY7UIec4)
 2. [https://www.youtube.com/watch?v=_BEkI1gKwUg](https://www.youtube.com/watch?v=_BEkI1gKwUg)
 

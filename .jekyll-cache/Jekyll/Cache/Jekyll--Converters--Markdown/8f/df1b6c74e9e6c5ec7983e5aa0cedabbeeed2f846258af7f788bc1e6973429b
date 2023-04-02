@@ -1,0 +1,39 @@
+I"�<h1 id="introduction">Introduction</h1>
+<p>There are some videos that show the “Gameboy Micro” working without soldering.  However, these videos do not show you clear screenshots of what it should look like or the positioning, just the end result with tape on top.  Here are the example videos:</p>
+<ol>
+  <li><a href="https://www.youtube.com/watch?v=GbOzY7UIec4">https://www.youtube.com/watch?v=GbOzY7UIec4</a></li>
+  <li><a href="https://www.youtube.com/watch?v=_BEkI1gKwUg">https://www.youtube.com/watch?v=_BEkI1gKwUg</a></li>
+</ol>
+
+<h2 id="why">Why?</h2>
+<p>Converting a DS Lite into a “Gameboy Macro” is a way to save the device after the top screen stops functioning.  When the top screen is not detected, the bottom doesn’t load, just a quick white flash, and the device turns off.  The proper way to fix this is to solder a 330 Ohm resistor (surface mount) to contact points labelled <code class="language-plaintext highlighter-rouge">LEDA2</code> and <code class="language-plaintext highlighter-rouge">LEDC2</code>.  This will allow you to use just the bottom half of the DS Lite as a Gameboy Advance (GBA) without producing more electronic waste.  This hack is a last-ditch-effort to save a DS Lite device WITHOUT using a solder, and without buying anything outside of regular household items.</p>
+
+<h2 id="instructions">Instructions</h2>
+
+<ol>
+  <li>
+    <p>Open up the DS Lite and remove the top half. There are plenty of tutorials on how to do this, so we’ll skip right to the important part.</p>
+  </li>
+  <li>
+    <p>Take the rubber pad for the buttons and slice off one of the black contacts (not from the D-Pad!).  Reminder, that the Gameboy Advance only had the <code class="language-plaintext highlighter-rouge">D-PAD</code>, <code class="language-plaintext highlighter-rouge">START</code>, <code class="language-plaintext highlighter-rouge">SELECT</code>, <code class="language-plaintext highlighter-rouge">L+R</code> triggers, and <code class="language-plaintext highlighter-rouge">A+B</code> buttons.  We’re essentially removing contact with one of the useless buttons <code class="language-plaintext highlighter-rouge">X/Y</code> to make this work.  In other tutorials, this pad is cut up with scissors.  Using an X-Acto knife (or similar) works.
+ <img src="/img/gameboy-macro/gbmacro_01.jpg" alt="Screenshot" /></p>
+  </li>
+  <li>
+    <p>Place the black side of the contact faced down on the contact points labelled <code class="language-plaintext highlighter-rouge">LEDA2</code> and <code class="language-plaintext highlighter-rouge">LEDC2</code>.  Once in place, put some tape on it.  Kapton tape works great here.  If you don’t have this handy, open up the top half of the DS Lite and use the yellow tape there.  It should still be nice and sticky if it hasn’t been removed before.</p>
+
+    <p><img src="/img/gameboy-macro/gbmacro_02.jpg" alt="Screenshot" /></p>
+  </li>
+  <li>
+    <p>Place the bottom screen back in place and make sure to push in the ribbon cable all the way.  This is a good time to put in the battery to test if it turns on.  If you just get a white sceen, re-seat the ribbon cable and try again. 
+ <img src="/img/gameboy-macro/gbmacro_03.jpg" alt="Screenshot" /></p>
+  </li>
+  <li>
+    <p>Once everything is working, put the shell back together and try again.
+ <img src="/img/gameboy-macro/gbmacro_04.jpg" alt="Screenshot" /></p>
+  </li>
+</ol>
+
+<h1 id="remarks">Remarks</h1>
+<p>Be extra careful when removing the wifi wires.  If you remove them too fast, it might hit the <code class="language-plaintext highlighter-rouge">EM10</code> filter and crack it.  While this still allows the device to function, you lose charging capability.
+   <img src="/img/gameboy-macro/gbmacro_05.jpg" alt="Screenshot" /></p>
+:ET
