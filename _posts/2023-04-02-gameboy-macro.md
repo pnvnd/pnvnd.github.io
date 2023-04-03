@@ -34,3 +34,15 @@ Converting a DS Lite into a "Gameboy Macro" is a way to save the device after th
 # Remarks
 Be extra careful when removing the wifi wires.  If you remove them too fast, it might hit the `EM10` filter and crack it.  While this still allows the device to function, you lose charging capability.
    ![Screenshot](/img/gameboy-macro/gbmacro_05.jpg)
+
+To fix this without any other parts, you'll need a soldering iron for this.  First, break of the cracked piece, using tweezers if needed.
+  ![Screenshot](/img/gameboy-macro/gbmacro_06.jpg)
+
+Use a bit of soldering wire to bridge the contacts from left to right like the image below.
+  ![Screenshot](/img/gameboy-macro/gbmacro_07.jpg)
+
+Here's another angle of what the soldering should look like:
+  ![Screenshot](/img/gameboy-macro/gbmacro_08.jpg)
+
+Now, plug in the charger to make sure the orange light shows up.
+  ![Screenshot](/img/gameboy-macro/gbmacro_09.jpg)

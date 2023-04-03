@@ -1,4 +1,4 @@
-I"�<h1 id="introduction">Introduction</h1>
+I"R<h1 id="introduction">Introduction</h1>
 <p>There are some videos that show the “Gameboy Micro” working without soldering.  However, these videos do not show you clear screenshots of what it should look like or the positioning, just the end result with tape on top.  Here are the example videos:</p>
 <ol>
   <li><a href="https://www.youtube.com/watch?v=GbOzY7UIec4">https://www.youtube.com/watch?v=GbOzY7UIec4</a></li>
@@ -36,4 +36,16 @@
 <h1 id="remarks">Remarks</h1>
 <p>Be extra careful when removing the wifi wires.  If you remove them too fast, it might hit the <code class="language-plaintext highlighter-rouge">EM10</code> filter and crack it.  While this still allows the device to function, you lose charging capability.
    <img src="/img/gameboy-macro/gbmacro_05.jpg" alt="Screenshot" /></p>
+
+<p>To fix this without any other parts, you’ll need a soldering iron for this.  First, break of the cracked piece, using tweezers if needed.
+  <img src="/img/gameboy-macro/gbmacro_06.jpg" alt="Screenshot" /></p>
+
+<p>Use a bit of soldering wire to bridge the contacts from left to right like the image below.
+  <img src="/img/gameboy-macro/gbmacro_07.jpg" alt="Screenshot" /></p>
+
+<p>Here’s another angle of what the soldering should look like:
+  <img src="/img/gameboy-macro/gbmacro_08.jpg" alt="Screenshot" /></p>
+
+<p>Now, plug in the charger to make sure the orange light shows up.
+  <img src="/img/gameboy-macro/gbmacro_09.jpg" alt="Screenshot" /></p>
 :ET
