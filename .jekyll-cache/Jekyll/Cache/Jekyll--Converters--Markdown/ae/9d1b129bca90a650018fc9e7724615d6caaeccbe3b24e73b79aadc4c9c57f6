@@ -1,0 +1,17 @@
+I"�<h1 id="introduction">Introduction</h1>
+<p>Pihole runs great on a Raspberry Pi, but what about other devices?  If you have a server lying around that can run Docker, Pihole will work.</p>
+
+<h2 id="why">Why?</h2>
+<p>Pihole was created to run on Rasbperry Pi devices, but this shouldn’t be limited to device.  There is an official Docker image that can be used on any device that can run Docker.  The only caveat is that you’ll need to manually update the container when a new version comes out.  Luckily, the following guide will show you how to do it with a script.</p>
+
+<h2 id="instructions">Instructions</h2>
+
+<p>Make sure you have a device capabile of running Docker first.</p>
+
+<ol>
+  <li>Start by pulling the pihole image
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull pihole/pihole
+</code></pre></div>    </div>
+  </li>
+</ol>
+:ET

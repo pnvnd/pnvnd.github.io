@@ -6,7 +6,9 @@ background: '/img/bg-about.jpg'
 ---
 
 # Timeline
-Check out some of my projects
+
+## 2022
+- Baka to Test to Shoukanjuu Portable (PSP) localization
 
 ## 2021
 - Tales of Destiny 2 (PS2) localization

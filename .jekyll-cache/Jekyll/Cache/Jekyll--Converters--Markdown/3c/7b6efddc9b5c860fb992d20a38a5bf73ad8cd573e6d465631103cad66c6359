@@ -1,0 +1,66 @@
+I"�<h1 id="introduction">Introduction</h1>
+<p>Pihole runs great on a Raspberry Pi, but what about other devices?  If you have a server lying around that can run Docker, Pihole will work.</p>
+
+<h2 id="why">Why?</h2>
+<p>Pihole was created to run on Rasbperry Pi devices, but this shouldn’t be limited to device.  There is an official Docker image that can be used on any device that can run Docker.  The only caveat is that you’ll need to manually update the container when a new version comes out.  Luckily, the following guide will show you how to do it with a script.</p>
+
+<h2 id="instructions">Instructions</h2>
+
+<p>Make sure you have a device capabile of running Docker first.</p>
+
+<ol>
+  <li>Start by pulling the pihole image
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull pihole/pihole
+</code></pre></div>    </div>
+  </li>
+  <li>If you already have pihole running, stop it, and remove the container
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker stop pihole
+docker rm -f pihole
+</code></pre></div>    </div>
+  </li>
+  <li>We’re going to create two files on the device running docker so we can create mount points later: <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> and <code class="language-plaintext highlighter-rouge">resolv.conf</code>.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo mkdir /opt/pihole
+sudo touch /opt/pihole/docker-compose.yml
+sudo touch /opt/pihole/resolv.conf
+cd /opt/pihole
+</code></pre></div>    </div>
+  </li>
+  <li>The <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file should look something like this:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>version: "3"
+
+# https://github.com/pi-hole/docker-pi-hole/blob/master/README.md
+
+services:
+pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    # For DHCP it is recommended to remove these ports and instead add: network_mode: "host"
+    ports:
+    - "53:53/tcp"
+    - "53:53/udp"
+    - "67:67/udp"
+    - "80:80/tcp"
+    environment:
+    TZ: 'America/Toronto'
+    # WEBPASSWORD: 'set a secure password here or it will be random'
+    # Volumes store your data between container upgrades
+    volumes:
+    - './etc-pihole:/etc/pihole'
+    - './etc-dnsmasq.d:/etc/dnsmasq.d'
+    - './resolv.conf:/etc/resolv.conf'
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+    - NET_ADMIN
+    restart: unless-stopped # Recommended but not required (DHCP needs NET_ADMIN)
+</code></pre></div>    </div>
+  </li>
+  <li>The <code class="language-plaintext highlighter-rouge">resolv.conf</code> should look like this:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>search home
+nameserver 127.0.0.1
+options ndots:0
+</code></pre></div>    </div>
+  </li>
+  <li></li>
+</ol>
+
+:ET

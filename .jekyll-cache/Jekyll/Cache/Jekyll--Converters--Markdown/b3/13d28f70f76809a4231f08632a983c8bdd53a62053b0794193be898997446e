@@ -1,0 +1,112 @@
+I".<h1 id="introduction">Introduction</h1>
+<p>Pihole runs great on a Raspberry Pi, but what about other devices?  If you have a server lying around that can run Docker, Pihole will work.</p>
+
+<h2 id="why">Why?</h2>
+<p>Pihole was created to run on Rasbperry Pi devices, but this shouldn’t be limited to device.  There is an official Docker image that can be used on any device that can run Docker.  The only caveat is that you’ll need to manually update the container when a new version comes out.  Luckily, the following guide will show you how to do it with a script.</p>
+
+<h2 id="instructions">Instructions</h2>
+
+<p>Make sure you have a device capabile of running Docker first.</p>
+
+<ol>
+  <li>Start by pulling the latest <code class="language-plaintext highlighter-rouge">pihole</code> image.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker pull pihole/pihole
+</code></pre></div>    </div>
+  </li>
+  <li>If you already have <code class="language-plaintext highlighter-rouge">pihole</code> running, stop it, and remove the container
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker stop pihole
+docker rm -f pihole
+</code></pre></div>    </div>
+  </li>
+  <li>We’re going to create two files on the device running docker so we can create mount points later: <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> and <code class="language-plaintext highlighter-rouge">resolv.conf</code>.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo mkdir /opt/pihole
+sudo touch /opt/pihole/docker-compose.yml
+sudo touch /opt/pihole/resolv.conf
+cd /opt/pihole
+</code></pre></div>    </div>
+  </li>
+  <li>The <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file should look something like the following.  This is what you’ll be running each time you get a new container <code class="language-plaintext highlighter-rouge">pihole</code> with updates.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>version: "3"
+
+# https://github.com/pi-hole/docker-pi-hole/blob/master/README.md
+
+services:
+pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    # For DHCP it is recommended to remove these ports and instead add: network_mode: "host"
+    ports:
+    - "53:53/tcp"
+    - "53:53/udp"
+    - "67:67/udp"
+    - "80:80/tcp"
+    environment:
+    TZ: 'America/Toronto'
+    # WEBPASSWORD: 'set a secure password here or it will be random'
+    # Volumes store your data between container upgrades
+    volumes:
+    - './etc-pihole:/etc/pihole'
+    - './etc-dnsmasq.d:/etc/dnsmasq.d'
+    - './resolv.conf:/etc/resolv.conf'
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+    - NET_ADMIN
+    restart: unless-stopped # Recommended but not required (DHCP needs NET_ADMIN)
+</code></pre></div>    </div>
+  </li>
+  <li>The <code class="language-plaintext highlighter-rouge">resolv.conf</code> should look like the following.  This is required so you can update your lists in <code class="language-plaintext highlighter-rouge">pihole</code> without issues.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>search home
+nameserver 127.0.0.1
+options ndots:0
+</code></pre></div>    </div>
+  </li>
+  <li>With the two files in place, simply run this command:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up -d
+</code></pre></div>    </div>
+  </li>
+  <li>Once <code class="language-plaintext highlighter-rouge">pihole</code> is up and running, check your device’s IP address and go to <code class="language-plaintext highlighter-rouge">http://&lt;device-ip&gt;/admin</code> to login with what ever password you’ve set.  If it’s working, remove any old <code class="language-plaintext highlighter-rouge">pihole</code> images.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker image prune -f
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="summary">Summary</h2>
+<p>Because we’re mounting files to the Docker container, we can pull the latest <code class="language-plaintext highlighter-rouge">pihole</code> image and spin up new containers with the <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file that mounts the persistant files back in place.  Because the <code class="language-plaintext highlighter-rouge">pihole</code> images get updated every month, you can automate this task with a shell script.  Create <code class="language-plaintext highlighter-rouge">update_pihole.sh</code> and add the following:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#! /bin/bash
+docker pull pihole/pihole
+docker stop pihole
+docker rm -f pihole
+cd /opt/pihole
+docker-compose up -d
+docker image prune -f
+</code></pre></div></div>
+
+<p>To automate this further, you can create a <code class="language-plaintext highlighter-rouge">cronjob</code> in Linux by doing the following:</p>
+
+<ol>
+  <li>Update your permissions to allow your script to execute
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod +x ~/update_pihole.sh`
+</code></pre></div>    </div>
+  </li>
+  <li>Start by entering <code class="language-plaintext highlighter-rouge">crontab -e</code> to edit our cronjobs.  (I used <code class="language-plaintext highlighter-rouge">/bin/nano</code> but you can use whatever you want.)</li>
+  <li>At the bottom of the file, paste this command.  This runs the <code class="language-plaintext highlighter-rouge">update_pihole.sh</code> script on the first of each month at midnight.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0 0 1 * * /opt/pihole/update_pihole.sh
+</code></pre></div>    </div>
+  </li>
+  <li>Save the file and exit.  You should see <code class="language-plaintext highlighter-rouge">crontab: installing new crontab</code>.</li>
+  <li>To check your cronjob:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>crontab -l`
+</code></pre></div>    </div>
+  </li>
+  <li>Check to make sure the cron service is running:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>service cron status
+</code></pre></div>    </div>
+  </li>
+  <li>If <code class="language-plaintext highlighter-rouge">cron</code> is not running, start the service:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo cron start
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>##</p>
+:ET
