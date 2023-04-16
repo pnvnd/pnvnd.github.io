@@ -1,0 +1,556 @@
+I"-n<h1 id="game--watch-mario-flashing-guide">Game &amp; Watch (Mario) Flashing Guide</h1>
+<p>This is a flashing guide for the Game &amp; Watch (Mario) device using a Raspberry Pi 4B device and 3 dupont cables.
+While this is not recommended, it is also the most economical solution option for those who already have a Rasbperry Pi device.</p>
+
+<h2 id="reference">Reference</h2>
+<p>This guide is based on the <code class="language-plaintext highlighter-rouge">vendo232</code> guides:</p>
+<ol>
+  <li><a href="https://drive.google.com/file/d/11kkGMHlUPhibfyKQMqV80aRDrACqgsQz/view?usp=sharing">https://drive.google.com/file/d/11kkGMHlUPhibfyKQMqV80aRDrACqgsQz/view?usp=sharing</a> (v3 guide)</li>
+  <li><a href="https://drive.google.com/file/d/11kkGMHlUPhibfyKQMqV80aRDrACqgsQz/view?usp=sharing">https://drive.google.com/file/d/1-_H1eT0NAwtXMT63oJ-Y1zjwr6NR5MdA/view?usp=sharing</a> (v2 guide)</li>
+  <li><a href="https://drive.google.com/file/d/11kkGMHlUPhibfyKQMqV80aRDrACqgsQz/view?usp=sharing">https://drive.google.com/file/d/1kGac4ohnkP8rjvv0B2MbsQpdZBbfyIty/view?usp=sharing</a> (v1 guide)</li>
+</ol>
+
+<h3 id="raspberry-pi-schematic">Raspberry Pi Schematic</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>GPIO</th>
+      <th>Pin</th>
+      <th>Pin</th>
+      <th>GPIO</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>3V3</td>
+      <td>1</td>
+      <td>2</td>
+      <td>5V</td>
+    </tr>
+    <tr>
+      <td>GPIO2</td>
+      <td>3</td>
+      <td>4</td>
+      <td>5V</td>
+    </tr>
+    <tr>
+      <td>GPIO3</td>
+      <td>5</td>
+      <td>6</td>
+      <td>Ground</td>
+    </tr>
+    <tr>
+      <td>GPIO4</td>
+      <td>7</td>
+      <td>8</td>
+      <td>GPIO14</td>
+    </tr>
+    <tr>
+      <td>Ground</td>
+      <td>9</td>
+      <td>10</td>
+      <td>GPIO15</td>
+    </tr>
+    <tr>
+      <td>GPIO17</td>
+      <td>11</td>
+      <td>12</td>
+      <td>GPIO18</td>
+    </tr>
+    <tr>
+      <td>GPIO27</td>
+      <td>13</td>
+      <td>14</td>
+      <td>Ground</td>
+    </tr>
+    <tr>
+      <td>GPIO22</td>
+      <td>15</td>
+      <td>16</td>
+      <td>GPIO23</td>
+    </tr>
+    <tr>
+      <td>3V3</td>
+      <td>17</td>
+      <td><strong>18</strong></td>
+      <td><strong>GPIO24</strong></td>
+    </tr>
+    <tr>
+      <td>GPIO10</td>
+      <td>19</td>
+      <td>20</td>
+      <td>Ground</td>
+    </tr>
+    <tr>
+      <td>GPIO9</td>
+      <td>21</td>
+      <td><strong>22</strong></td>
+      <td><strong>GPIO25</strong></td>
+    </tr>
+    <tr>
+      <td>GPIO11</td>
+      <td>23</td>
+      <td>24</td>
+      <td>GPIO8</td>
+    </tr>
+    <tr>
+      <td>Ground</td>
+      <td>25</td>
+      <td>26</td>
+      <td>GPIO7</td>
+    </tr>
+    <tr>
+      <td>ID_SD</td>
+      <td>27</td>
+      <td>28</td>
+      <td>ID_SC</td>
+    </tr>
+    <tr>
+      <td>GPIO5</td>
+      <td>29</td>
+      <td>30</td>
+      <td>Ground</td>
+    </tr>
+    <tr>
+      <td>GPIO6</td>
+      <td>31</td>
+      <td>32</td>
+      <td>GPIO12</td>
+    </tr>
+    <tr>
+      <td>GPIO13</td>
+      <td>33</td>
+      <td>34</td>
+      <td>Ground</td>
+    </tr>
+    <tr>
+      <td>GPIO19</td>
+      <td>35</td>
+      <td>36</td>
+      <td>GPIO16</td>
+    </tr>
+    <tr>
+      <td>GPIO26</td>
+      <td>37</td>
+      <td>38</td>
+      <td>GPIO20</td>
+    </tr>
+    <tr>
+      <td><strong>Ground</strong></td>
+      <td><strong>39</strong></td>
+      <td>40</td>
+      <td>GPIO21</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="game--watch-mario-schematic">Game &amp; Watch (Mario) Schematic</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>▸</th>
+      <th>①</th>
+      <th><strong>②</strong></th>
+      <th><strong>③</strong></th>
+      <th>④</th>
+      <th><strong>⑤</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Start</td>
+      <td>NRST</td>
+      <td><strong>SWDIO</strong></td>
+      <td><strong>GND</strong></td>
+      <td>VDD</td>
+      <td><strong>SWCLK</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="part-1---get-respberry-pi-ready">Part 1 - Get Respberry Pi Ready</h1>
+
+<p><img width="341" alt="screen1" src="https://user-images.githubusercontent.com/65086728/232258492-266672c5-a47f-494b-b639-a365b2826386.png" /></p>
+
+<ol>
+  <li>Install and launch the <a href="https://www.raspberrypi.com/software/">Rasberry Pi Imager</a></li>
+  <li>Choose OS &gt; Raspberry Pi OS (other) &gt; Raspberry Pi OS Lite (32-bit)</li>
+  <li>Select Advanced options and <code class="language-plaintext highlighter-rouge">Enable SSH</code> (Use password authentication)</li>
+  <li>
+    <p>Plug in dupont cables according to the following scheme</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Raspberry Pi</th>
+          <th>Nintendo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GPIO24 (pin 18)</td>
+          <td>② (SWDIO)</td>
+        </tr>
+        <tr>
+          <td>GPIO25 (pin 22)</td>
+          <td>⑤ (SWCLK)</td>
+        </tr>
+        <tr>
+          <td>GND (pin 39)</td>
+          <td>③ (GND)</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ol>
+
+<p><img src="https://user-images.githubusercontent.com/65086728/232258587-76689e13-ba04-4d96-a301-2d0fcc9f747f.png" alt="screen2" /></p>
+
+<h1 id="part-2---setup-raspberry-pi">Part 2 - Setup Raspberry Pi</h1>
+
+<p>Starting in your home directory <code class="language-plaintext highlighter-rouge">~</code> (or <code class="language-plaintext highlighter-rouge">cd ~</code>)</p>
+
+<ol>
+  <li>Install the latest updates
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt <span class="nt">-y</span> upgrade
+</code></pre></div>    </div>
+  </li>
+  <li>Download the tools
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v12.2.1-1.2/xpack-arm-none-eabi-gcc-12.2.1-1.2-linux-arm.tar.gz
+</code></pre></div>    </div>
+  </li>
+  <li>Create a a new directory <code class="language-plaintext highlighter-rouge">opt</code> in your home <code class="language-plaintext highlighter-rouge">~</code> directory
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> ~/opt
+</code></pre></div>    </div>
+  </li>
+  <li>Navigate to your newly created <code class="language-plaintext highlighter-rouge">~/opt</code> directory
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/opt
+</code></pre></div>    </div>
+  </li>
+  <li>Extract the tools in the previous directory into the current directory
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">tar </span>xvf ../xpack-arm-none-eabi-gcc-12.2.1-1.2-linux-arm.tar.gz xpack-arm-none-eabi-gcc-12.2.1-1.2
+</code></pre></div>    </div>
+  </li>
+  <li>Set an environment variable for the current session
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/home/pi/opt/xpack-arm-none-eabi-gcc-12.2.1-1.2/bin/
+</code></pre></div>    </div>
+  </li>
+  <li>Raspberry Pi OS (Lite) doesn’t come with Git installed, so install Git to clone repositories
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nt">-y</span> <span class="nb">install </span>git
+</code></pre></div>    </div>
+  </li>
+  <li>Clone the <a href="https://github.com/ghidraninja/game-and-watch-backup">ghidraninja/game-and-watch-backup</a> repository in your <code class="language-plaintext highlighter-rouge">~/opt</code> directory
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/ghidraninja/game-and-watch-backup.git
+</code></pre></div>    </div>
+  </li>
+  <li>Installing <code class="language-plaintext highlighter-rouge">npm</code> at this stage will get you Node.js 12.x.x, which is not compatible with <code class="language-plaintext highlighter-rouge">xpm</code>.  The following installs the latest LTS version of Node.js
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-fsSL</span> https://deb.nodesource.com/setup_lts.x | <span class="nb">sudo</span> <span class="nt">-E</span> bash -
+<span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">-y</span> nodejs
+</code></pre></div>    </div>
+  </li>
+  <li>Install <code class="language-plaintext highlighter-rouge">xpm</code>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>npm <span class="nb">install</span> <span class="nt">--global</span> xpm@latest
+</code></pre></div>    </div>
+  </li>
+  <li>Install OpenOCD as the current user.  Using <code class="language-plaintext highlighter-rouge">sudo</code> will result in a different path <code class="language-plaintext highlighter-rouge">/home/pi/.root/xPacks</code>.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xpm <span class="nb">install</span> <span class="nt">--global</span> @xpack-dev-tools/openocd@latest
+</code></pre></div>    </div>
+  </li>
+  <li>Set the <code class="language-plaintext highlighter-rouge">OPENOCD</code> environment variable
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">OPENOCD</span><span class="o">=</span><span class="s2">"/home/pi/.local/xPacks/@xpack-dev-tools/openocd/0.12.0-1.1/.content/bin/openocd"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Install more tools:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install </span>binutils-arm-none-eabi python3 libftdi1
+</code></pre></div>    </div>
+  </li>
+  <li>Go into the <code class="language-plaintext highlighter-rouge">game-and-watch-backup</code> directory
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>game-and-watch-backup
+</code></pre></div>    </div>
+  </li>
+  <li>Remove battery using a flathead screwdriver and use USB-C power instead.  Run these scripts in order, and follow instructions in the prompt to back up your firmware, and unlock the processor.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./1_sanity_check.sh rpi mario
+./2_backup_flash.sh rpi mario
+./3_backup_internal_flash.sh rpi mario
+./4_unlock_device.sh rpi mario
+./5_restore.sh
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>By the end of this, you’ll have three files on the Raspberry Pi that you <em>should</em> back up properly.</p>
+<ul>
+  <li>flash_backup_mario.bin (1024 KB)</li>
+  <li>itcm_backup_mario.bin (2 KB)</li>
+  <li>internal_flash_backup_mario.bin (128 KB)</li>
+</ul>
+
+<h1 id="part-3---install-retro-go">Part 3 - Install Retro-Go</h1>
+
+<ol>
+  <li>Return to the <code class="language-plaintext highlighter-rouge">~/opt/</code> directory
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ..
+</code></pre></div>    </div>
+  </li>
+  <li>Clone the <a href="https://github.com/ghidraninja/game-and-watch-flashloader">ghidraninja/game-and-watch-flashloader</a> repository
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/ghidraninja/game-and-watch-flashloader.git
+</code></pre></div>    </div>
+  </li>
+  <li>Go into the <code class="language-plaintext highlighter-rouge">game-and-watch-flashloader</code> repository
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>game-and-watch-flashloader
+</code></pre></div>    </div>
+  </li>
+  <li>Run the following command
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make <span class="nv">GCC_PATH</span><span class="o">=</span>/home/pi/opt/xpack-arm-none-eabi-gcc-12.2.1-1.2/bin/
+</code></pre></div>    </div>
+  </li>
+  <li>Return to the previous <code class="language-plaintext highlighter-rouge">~/opt/</code> directory
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ..
+</code></pre></div>    </div>
+  </li>
+  <li>Clone the <a href="https://github.com/kbeckmann/game-and-watch-retro-go">kbeckmann/game-and-watch-retro-go</a> repository, including the submodules
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone <span class="nt">--recurse-submodules</span> https://github.com/kbeckmann/game-and-watch-retro-go
+</code></pre></div>    </div>
+  </li>
+  <li>Copy roms into the <code class="language-plaintext highlighter-rouge">roms/nes</code> directory.  Here’s an example:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> ~/Downloads/rom.nes /home/pi/opt/game-and-watch-retro-go/roms/nes
+</code></pre></div>    </div>
+  </li>
+  <li>Go into the <code class="language-plaintext highlighter-rouge">game-and-watch-retro-go</code> repository
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>game-and-watch-retro-go
+</code></pre></div>    </div>
+  </li>
+  <li>Raspberry Pi OS (Lite) does not come with <code class="language-plaintext highlighter-rouge">pip</code> installed, so we need to install this.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">-y</span> python3-pip
+</code></pre></div>    </div>
+  </li>
+  <li>Once <code class="language-plaintext highlighter-rouge">pip</code> is installed, run the following to install the packages required to flash your memory
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 <span class="nt">-m</span> pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+</code></pre></div>    </div>
+  </li>
+  <li>Set another environment variable <code class="language-plaintext highlighter-rouge">ADAPTER</code> that the scripts will use.  In this case, we’re specifically using the Raspberry Pi.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">ADAPTER</span><span class="o">=</span>rpi
+</code></pre></div>    </div>
+  </li>
+  <li>If you haven’t already done so already, set the environment variable for <code class="language-plaintext highlighter-rouge">OPENOCD</code>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">OPENOCD</span><span class="o">=</span><span class="s2">"/home/pi/.local/xPacks/@xpack-dev-tools/openocd/0.12.0-1.1/.content/bin/openocd"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Flash your memory with compressed ROMs.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make <span class="nv">GCC_PATH</span><span class="o">=</span>/home/pi/opt/xpack-arm-none-eabi-gcc-12.2.1-1.2/bin/ <span class="nv">COMPRESS</span><span class="o">=</span>lzma <span class="nv">GNW_TARGET</span><span class="o">=</span>mario flash
+</code></pre></div>    </div>
+  </li>
+  <li>If flashing fails, run the command above again, this time, hold the dupont cables in place, as they can get loose and lose contact with the board.</li>
+</ol>
+
+<p>Here’s an example of the output when flashing is completed successfully
+<img src="https://user-images.githubusercontent.com/65086728/232258689-5a80fa4a-adc2-4819-89d6-d80eb5f68ea6.png" alt="screen3" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pi@rpi4b-8gb:~/opt/game-and-watch-retro-go $ make GCC_PATH=/home/pi/opt/xpack-arm-none-eabi-gcc-12.2.1-1.2/bin/ COMPRESS=lzma GNW_TARGET=mario flash
+Entering 'LCD-Game-Emulator'
+Entering 'retro-go-stm32'
+make[1]: Entering directory '/home/pi/opt/game-and-watch-retro-go'
+[ BASH ] Checking for updated roms
+/home/pi/.local/xPacks/@xpack-dev-tools/openocd/0.12.0-1.1/.content/bin/openocd -f scripts/interface_rpi.cfg -c "program build/gw_retro_go_intflash.bin 0x08000000 verify reset exit"
+xPack Open On-Chip Debugger 0.12.0-01004-g9ea7f3d64-dirty (2023-01-30-15:09)
+Licensed under GNU GPL v2
+For bug reports, read
+        http://openocd.org/doc/doxygen/bugs.html
+DEPRECATED! use 'sysfsgpio swd_nums' not 'sysfsgpio_swd_nums'
+DEPRECATED! use 'sysfsgpio srst_num' not 'sysfsgpio_srst_num'
+none separate
+
+Info : SysfsGPIO JTAG/SWD bitbang driver
+Info : This adapter doesn't support configurable speed
+Info : SWD DPIDR 0x6ba02477
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : gdb port disabled
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread
+xPSR: 0x01000000 pc: 0x080135c4 msp: 0x20020000
+Error: Translation from khz to adapter speed not implemented
+Error executing event reset-init on target stm32h7x.cpu0:
+embedded:startup.tcl:1193: Error:
+in procedure 'program'
+in procedure 'ocd_process_reset'
+in procedure 'ocd_process_reset_inner' called at file "embedded:startup.tcl", line 1193
+** Programming Started **
+Info : Device: STM32H7Ax/7Bx
+Info : flash size probed value 128k
+Info : STM32H7 flash has a single bank
+Info : Bank (0) size is 128 kb, base address is 0x08000000
+Info : Padding image section 0 at 0x0801990c with 4 bytes (bank write end alignment)
+Warn : Adding extra erase range, 0x08019910 .. 0x08019fff
+** Programming Finished **
+** Verify Started **
+** Verified OK **
+** Resetting Target **
+shutdown command invoked
+make[1]: Leaving directory '/home/pi/opt/game-and-watch-retro-go'
+make[1]: Entering directory '/home/pi/opt/game-and-watch-retro-go'
+[ BASH ] Checking for updated roms
+[ BIN ] gw_retro_go_extflash.bin
+scripts/flash_multi.sh build/gw_retro_go_extflash.bin 0
+Preparing chunk 1 / 1 in file /tmp/flash_chunk.6o6k0o
+Flashing!
+xPack Open On-Chip Debugger 0.12.0-01004-g9ea7f3d64-dirty (2023-01-30-15:09)
+Licensed under GNU GPL v2
+For bug reports, read
+        http://openocd.org/doc/doxygen/bugs.html
+DEPRECATED! use 'sysfsgpio swd_nums' not 'sysfsgpio_swd_nums'
+DEPRECATED! use 'sysfsgpio srst_num' not 'sysfsgpio_srst_num'
+none separate
+
+Info : SysfsGPIO JTAG/SWD bitbang driver
+Info : This adapter doesn't support configurable speed
+Info : SWD DPIDR 0x6ba02477
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : gdb port disabled
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread
+xPSR: 0x01000000 pc: 0x080135c4 msp: 0x20020000
+0x20020000
+0x080135c5
+msp (/32): 0x20020000
+
+pc (/32): 0x080135c5
+
+Starting flash app
+State: FLASHAPP_INIT
+Ready!
+Loading data
+xPack Open On-Chip Debugger 0.12.0-01004-g9ea7f3d64-dirty (2023-01-30-15:09)
+Licensed under GNU GPL v2
+For bug reports, read
+        http://openocd.org/doc/doxygen/bugs.html
+DEPRECATED! use 'sysfsgpio swd_nums' not 'sysfsgpio_swd_nums'
+DEPRECATED! use 'sysfsgpio srst_num' not 'sysfsgpio_srst_num'
+none separate
+
+Info : SysfsGPIO JTAG/SWD bitbang driver
+Info : This adapter doesn't support configurable speed
+Info : SWD DPIDR 0x6ba02477
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : gdb port disabled
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread
+xPSR: 0x21070000 pc: 0x080002d0 msp: 0x2001fddc
+Loading image into RAM
+826428 bytes written at address 0x24025800
+downloaded 826428 bytes in 72.018822s (11.206 KiB/s)
+
+65 bytes written at address 0x2000126c
+downloaded 65 bytes in 0.007050s (9.004 KiB/s)
+
+Starting flash process
+Please see the LCD for interactive status.
+State: FLASHAPP_CHECK_HASH_RAM
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_PROGRAM_NEXT
+State: FLASHAPP_PROGRAM
+State: FLASHAPP_PROGRAM
+State: FLASHAPP_PROGRAM
+Done!
+
+
+Programming of chunk 1 / 1 succeeded.
+
+
+Programming of the external flash succeeded.
+
+
+make[1]: Leaving directory '/home/pi/opt/game-and-watch-retro-go'
+make[1]: Entering directory '/home/pi/opt/game-and-watch-retro-go'
+# Reset the DBGMCU configuration register (DBGMCU_CR)
+xPack Open On-Chip Debugger 0.12.0-01004-g9ea7f3d64-dirty (2023-01-30-15:09)
+Licensed under GNU GPL v2
+For bug reports, read
+        http://openocd.org/doc/doxygen/bugs.html
+DEPRECATED! use 'sysfsgpio swd_nums' not 'sysfsgpio_swd_nums'
+DEPRECATED! use 'sysfsgpio srst_num' not 'sysfsgpio_srst_num'
+none separate
+
+Info : SysfsGPIO JTAG/SWD bitbang driver
+Info : This adapter doesn't support configurable speed
+Info : SWD DPIDR 0x6ba02477
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : gdb port disabled
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread
+xPSR: 0x01000000 pc: 0x080135c4 msp: 0x20020000
+make[1]: Leaving directory '/home/pi/opt/game-and-watch-retro-go'
+</code></pre></div></div>
+<h1 id="part-4---clean-up-and-get-more-space">Part 4 - Clean Up and Get More Space</h1>
+<p>This section will be new for those following the original v1, v2, and v3 guides.  Consider this section as the continuation of the <code class="language-plaintext highlighter-rouge">vendo232</code> guide.</p>
+
+<ol>
+  <li>Before proceeding, remember to set your environment variables.  The only real difference here is a new path to <code class="language-plaintext highlighter-rouge">OPENOCD</code>.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">OPENOCD</span><span class="o">=</span><span class="s2">"/opt/openocd-git/bin/openocd"</span>
+<span class="nb">export </span><span class="nv">GCC_PATH</span><span class="o">=</span><span class="s2">"/home/pi/opt/xpack-arm-none-eabi-gcc-12.2.1-1.2/bin/"</span>
+<span class="nb">export </span><span class="nv">ADAPTER</span><span class="o">=</span><span class="s2">"rpi"</span>
+<span class="nb">export </span><span class="nv">GNW_TARGET</span><span class="o">=</span><span class="s2">"mario"</span>
+<span class="nb">export </span><span class="nv">COMPRESS</span><span class="o">=</span><span class="s2">"lzma"</span>
+<span class="nb">export </span><span class="nv">INTFLASH_BANK</span><span class="o">=</span><span class="s2">"1"</span>
+</code></pre></div>    </div>
+    <p>Alternatively, add these environment variables permanantly by adding this to <code class="language-plaintext highlighter-rouge">/etc/environment</code> so that you don’t need to set these every session.</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nano /etc/environment
+</code></pre></div>    </div>
+    <p>The contents should look like this:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">OPENOCD</span><span class="o">=</span>/opt/openocd-git/bin/openocd
+<span class="nv">GCC_PATH</span><span class="o">=</span>/home/pi/opt/xpack-arm-none-eabi-gcc-12.2.1-1.2/bin/
+<span class="nv">ADAPTER</span><span class="o">=</span>rpi
+<span class="nv">GNW_TARGET</span><span class="o">=</span>mario
+<span class="nv">COMPRESS</span><span class="o">=</span>lzma
+<span class="nv">INTFLASH_BANK</span><span class="o">=</span>1
+</code></pre></div>    </div>
+    <p>Use <code class="language-plaintext highlighter-rouge">CTRL+X</code> to exit, and when prompted to save, enter <code class="language-plaintext highlighter-rouge">Yes</code> to proceed.</p>
+  </li>
+  <li>Return to the previous <code class="language-plaintext highlighter-rouge">~/opt/</code> directory
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/opt/
+</code></pre></div>    </div>
+  </li>
+  <li>Clone the patched version of <a href="https://github.com/kbeckmann/ubuntu-openocd-git-builder">openocd</a> and go into the root directory of this repository
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/kbeckmann/ubuntu-openocd-git-builder.git
+<span class="nb">cd </span>ubuntu-openocd-git-builder
+</code></pre></div>    </div>
+  </li>
+  <li>Compile and install the patched version of openocd
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./build.sh
+<span class="nb">sudo </span>dpkg <span class="nt">-i</span> openocd-git_<span class="k">*</span>_armhf.deb
+<span class="nb">sudo </span>apt-get <span class="nt">-y</span> <span class="nt">-f</span> <span class="nb">install</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Go back to the <code class="language-plaintext highlighter-rouge">game-and-watch-retro-go</code> repository
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~/opt/game-and-watch-retro-go
+</code></pre></div>    </div>
+  </li>
+  <li>Double-check environment variables.  Once confirmed, flash the firmware with <code class="language-plaintext highlighter-rouge">make -j$(nproc)</code> (which should be <code class="language-plaintext highlighter-rouge">make -j4</code> for Raspberry Pi 4B devices).  This should speed up the process when you use <code class="language-plaintext highlighter-rouge">make</code> significantly.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make clean
+make <span class="nt">-j</span><span class="si">$(</span><span class="nb">nproc</span><span class="si">)</span> flash
+</code></pre></div>    </div>
+  </li>
+  <li>(Optional) To get a little more room, disable the saving feature by flashing again with the following command. Not recommended if you play long games such as Final Fantasy or Pokémon.  This option was able to fit up to 17 NES ROMs with <code class="language-plaintext highlighter-rouge">lzma</code> compression on a 1MB chip.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make <span class="nt">-j</span><span class="si">$(</span><span class="nb">nproc</span><span class="si">)</span> <span class="nv">STATE_SAVING</span><span class="o">=</span>0 flash
+</code></pre></div>    </div>
+    <p><img src="https://user-images.githubusercontent.com/65086728/232258749-bd66ab11-0c77-4c34-932f-f6336d1573cd.png" alt="screen4" /></p>
+  </li>
+  <li>(Optional) Use a coin-sized piece of <a href="https://www.mrclean.com/en-us/shop-products/magic-erasers">Mr. Clean Magic Eraser</a> to remove any print on the gold plate.  Be careful not to rub off too much of the red plastic.
+<img src="https://user-images.githubusercontent.com/65086728/232258871-c3348418-3bb1-4817-98f8-feb235b671c9.png" alt="screen5" /></li>
+</ol>
+
+:ET
