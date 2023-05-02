@@ -83,8 +83,7 @@ Because we're mounting files to the Docker container, we can pull the latest `pi
 docker pull pihole/pihole
 docker stop pihole
 docker rm -f pihole
-cd /opt/pihole
-docker-compose up -d
+docker-compose -f /opt/pihole/update_pihole.sh up -d
 docker image prune -f
 ```
 
@@ -102,7 +101,7 @@ To automate this further, you can create a `cronjob` in Linux by doing the follo
 4. Save the file and exit.  You should see `crontab: installing new crontab`.
 5. To check your cronjob:
    ```
-   crontab -l`
+   crontab -l
    ```
 6. Check to make sure the cron service is running:
    ```
