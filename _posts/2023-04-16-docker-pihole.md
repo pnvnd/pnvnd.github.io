@@ -91,7 +91,7 @@ To automate this further, you can create a `cronjob` in Linux by doing the follo
 
 1. Update your permissions to allow your script to execute
    ```
-   chmod +x ~/update_pihole.sh`
+   chmod +x ~/update_pihole.sh
    ```
 2. Start by entering `crontab -e` to edit our cronjobs.  (I used `/bin/nano` but you can use whatever you want.)
 3. At the bottom of the file, paste this command.  This runs the `update_pihole.sh` script on the first of each month at midnight.
