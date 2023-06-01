@@ -83,7 +83,7 @@ Because we're mounting files to the Docker container, we can pull the latest `pi
 docker pull pihole/pihole
 docker stop pihole
 docker rm -f pihole
-docker-compose -f /opt/pihole/update_pihole.sh up -d
+docker-compose -f /opt/pihole/docker-compose.yml up -d
 docker image prune -f
 ```
 
