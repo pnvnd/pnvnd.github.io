@@ -80,12 +80,14 @@ Make sure you have a device capabile of running Docker first.
 Because we're mounting files to the Docker container, we can pull the latest `pihole` image and spin up new containers with the `docker-compose.yml` file that mounts the persistant files back in place.  Because the `pihole` images get updated every month, you can automate this task with a shell script.  Create `update_pihole.sh` and add the following:
 ```
 #! /bin/bash
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games"
 docker pull pihole/pihole
 docker stop pihole
 docker rm -f pihole
 docker-compose -f /opt/pihole/docker-compose.yml up -d
 docker image prune -f
 ```
+Note, your `PATH` might be different, so do an `echo $PATH` and use that instead.  Without this, the cronjob won't run.
 
 To automate this further, you can create a `cronjob` in Linux by doing the following:
 
